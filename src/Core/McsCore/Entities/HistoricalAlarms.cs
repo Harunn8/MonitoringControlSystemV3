@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace McsCore.Entities
 {
-    public class HistoricalAlarms : Alarms
+    public class HistoricalAlarms : AlarmsModels
     {
     }
 }

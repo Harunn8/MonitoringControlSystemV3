@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace McsCore.Entities
+namespace Application.Services
 {
-    public class ActiveAlarms : AlarmsModels
+    internal class TcpDeviceService
     {
     }
 }
