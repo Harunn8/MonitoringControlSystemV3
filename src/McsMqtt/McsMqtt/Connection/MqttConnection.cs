@@ -4,6 +4,8 @@ using System;
 using Serilog;
 using MQTTnet.Client.Options;
 using System.Threading;
+using McsMqtt.Settings;
+using Microsoft.Extensions.Options;
 
 namespace McsMqtt.Connection
 {
@@ -12,11 +14,13 @@ namespace McsMqtt.Connection
         IMqttClientOptions _options;
         private IMqttClient _mqttClient;
         private bool _disposed;
+        private readonly MqttSettings _settings;
 
-        public MqttConnection(IMqttClientOptions options, IMqttClient mqttClient)
+        public MqttConnection(IMqttClientOptions options, IMqttClient mqttClient, IOptions<MqttSettings> settings)
         {
             _options = options;
             _mqttClient = mqttClient;
+            _settings = settings.Value;
 
             if (!_mqttClient.IsConnected)
             {
@@ -49,32 +53,22 @@ namespace McsMqtt.Connection
 
         public void TryConnect()
         {
-            try
-            {
-                _mqttClient.UseDisconnectedHandler(e =>
+                try
                 {
-                    Log.Information("Disconnected from MQTT Broker. Reconnecting in 5 seconds...");
-                    var brokerCount = 0;
-                    while(brokerCount == 5)
-                    {
-                        Thread.Sleep(500);
-                        _mqttClient.ReconnectAsync();
-                        if(_mqttClient.IsConnected) 
-                        {
-                            Log.Information("Connected to MQTT Broker.");
-                            break;
-                        }
-                        brokerCount++;
-                        Log.Warning("Could not connect to MQTT Broker.");
-                    }
-                });
+                    var options = new MqttClientOptionsBuilder()
+                        .WithClientId("telemetry")
+                        .WithTcpServer(_settings.Host, _settings.Port)
+                        .Build();
 
+                    _mqttClient.ConnectAsync(options, CancellationToken.None).Wait();
+
+                    Log.Information("Connected to MQTT Broker");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to connect: {Message}", ex.Message);
+                }
+            
             }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to established MQTT connection: {ErrorMessage}", ex.Message);
-                throw;
-            }
-        }
     }
 }

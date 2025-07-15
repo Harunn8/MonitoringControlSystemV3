@@ -16,14 +16,17 @@ namespace McsCore.AppDbContext
     {
         public McsAppDbContext CreateDbContext(string[] args)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Controllers"))
-                .AddJsonFile("appsettings.json")
+            var basePath =  @"C:\Users\harun\source\repos\MonitoringControlSystemV3\src\Device\DeviceAPI\DeviceAPI";
+
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(basePath)
+                .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var optionsBuilder = new DbContextOptionsBuilder<McsAppDbContext>();
             var connectionString = configuration.GetConnectionString("Postgres");
 
+            var optionsBuilder = new DbContextOptionsBuilder<McsAppDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
 
             return new McsAppDbContext(optionsBuilder.Options);

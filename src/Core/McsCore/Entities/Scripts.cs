@@ -8,7 +8,7 @@ namespace McsCore.Entities
 {
     public class Scripts
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = new Guid();
         public string ScriptName { get; set; }
         public string Script { get; set; }
         public DateTime CreatedDate { get; set; }

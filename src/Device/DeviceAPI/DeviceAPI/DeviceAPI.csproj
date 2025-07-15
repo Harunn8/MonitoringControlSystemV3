@@ -5,11 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\..\..\Core\McsCore\McsCore.csproj" />
+    <ProjectReference Include="..\..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
+    <ProjectReference Include="..\..\Application\Application.csproj" />
   </ItemGroup>
 
 </Project>

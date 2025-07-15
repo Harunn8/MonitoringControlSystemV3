@@ -5,8 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Services\Base\" />
+    <ProjectReference Include="..\..\Core\McsCore\McsCore.csproj" />
+    <ProjectReference Include="..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
+    <ProjectReference Include="..\..\McsRedis\Redis\Redis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="5.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="5.0.7" />
   </ItemGroup>
 
 </Project>

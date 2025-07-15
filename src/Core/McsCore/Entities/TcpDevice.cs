@@ -9,7 +9,7 @@ namespace McsCore.Entities
 {
     public class TcpDevice
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = new Guid();
         public string DeviceName { get; set; }
         public string IpAddress { get; set; }
         public int Port { get; set; }
@@ -20,7 +20,7 @@ namespace McsCore.Entities
     public class TcpData
     {
         [Key]
-        public Guid ParameterId { get; set; }
+        public Guid ParameterId { get; set; } = new Guid();
         public string Request { get; set; }
         public string ParameterName { get; set; }
     }
