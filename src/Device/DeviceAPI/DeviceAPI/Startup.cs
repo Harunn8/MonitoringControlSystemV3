@@ -1,30 +1,35 @@
+﻿using Application.Mapper;
+using Application.Services;
+using Application.Services.Base;
+using AutoMapper;
+using McsCore.AppDbContext;
+using McsCore.AppDbContext.Mongo;
+using McsCore.Mongo;
 using McsMqtt.Connection;
 using McsMqtt.Connection.Base;
 using McsMqtt.Producer;
 using McsMqtt.Settings;
+using McsUserLogs.Services;
+using McsUserLogs.Services.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using MQTTnet.Client;
+using MongoDB.Driver;
 using MQTTnet;
+using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using Serilog;
+using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Serilog.Core;
-using Application.Services.Base;
-using Application.Services;
-using McsCore.AppDbContext;
-using Microsoft.EntityFrameworkCore;
-using Application.Mapper;
-using AutoMapper;
 
 
 namespace DeviceAPI
@@ -51,7 +56,7 @@ namespace DeviceAPI
 
             services.Configure<MqttSettings>(Configuration.GetSection("Mqtt"));
 
-            services.AddSingleton<IMqttClientOptions>(sp =>
+            services.AddScoped<IMqttClientOptions>(sp =>
             {
                 var config = sp.GetRequiredService<IConfiguration>()
                                .GetSection("Mqtt")
@@ -59,7 +64,7 @@ namespace DeviceAPI
 
                 return new MqttClientOptionsBuilder()
                     .WithClientId("telemetry")
-                    .WithTcpServer(config.Host, config.Port)
+                    .WithTcpServer(config.IpAddress, config.Port)
                     .Build();
             });
 
@@ -81,9 +86,34 @@ namespace DeviceAPI
 
             #endregion
 
+            #region Mongo
+            Log.Information("MongoDB connection preparing is started");
+
+            var mongoDbSettings = Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
+
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var connectionString = Configuration["ConnectionStrings:MongoDb"];
+                return new MongoClient(connectionString);
+            });
+
+            services.AddSingleton(sp =>
+            {
+                var mongoClient = sp.GetRequiredService<IMongoClient>();
+                return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
+            });
+            services.AddSingleton<MongoDbContext>();
+
+            services.AddScoped<IUserLogService, UserLogService>();
+
+            Log.Information("MongoDB connection was established");
+            #endregion
+
             #region Services
             services.AddAutoMapper(typeof(DeviceServiceMappingProfile));
             services.AddScoped<ISnmpDeviceService, SnmpDeviceService>();
+            services.AddScoped<ITcpDeviceService, TcpDeviceService>();
+            services.AddScoped<IUserLogService, UserLogService>();
 
             #endregion
 

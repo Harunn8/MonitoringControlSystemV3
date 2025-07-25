@@ -1,0 +1,48 @@
+﻿using AutoMapper;
+using McsCore.AppDbContext;
+using McsCore.AppDbContext.Mongo;
+using McsCore.Entities;
+using McsUserLogs.Responses;
+using McsUserLogs.Services.Base;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace McsUserLogs.Services
+{
+    public class UserLogService : IUserLogService
+    {
+        private readonly IMongoCollection<UserLogs> _userLogs;
+        private readonly McsAppDbContext _dbContext;
+        private readonly IMapper _mapper;
+
+        public UserLogService(MongoDbContext context, McsAppDbContext dbContext, IMapper mapper)
+        {
+            _userLogs = context.UserLogs;
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
+
+        public async Task SetEventUserLog(UserLogs log)
+        {
+            await _userLogs.InsertOneAsync(log);    
+        }
+        public async Task<List<McsUserLogResponse>> GetUserLogByUserId(Guid userId)
+        {
+            var user = await _dbContext.Users.Where(x => x.Id == userId)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return new List<McsUserLogResponse>();
+            }
+            var logs = await _userLogs.Find(x => x.UserId == userId).ToListAsync();
+            var response = _mapper.Map<List<McsUserLogResponse>>(logs);
+            return new List<McsUserLogResponse>(response);
+        }
+    }
+}

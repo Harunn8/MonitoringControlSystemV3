@@ -119,5 +119,17 @@ namespace DeviceAPI.Controllers
             var result = _snmpService.DeleteSnmpDevice(id);
             return Ok("Device could delete");
         }
+
+        [HttpPost("StartSnmpCommunication/{id}")]
+        public async Task<ActionResult> StartSnmpCommunication(Guid id)
+        {
+            var device = await _snmpService.GetSnmpDeviceById(id);
+            if (device == null)
+            {
+                return NotFound("Device Not Found");
+            }
+            await _snmpService.StartSnmpCommunication(id);
+            return Ok("SNMP Communication started successfully.");
+        }
     }
 }

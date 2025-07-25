@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Logger\McsUserLogs\McsUserLogs.csproj" />
     <ProjectReference Include="..\..\Core\McsCore\McsCore.csproj" />
     <ProjectReference Include="..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
     <ProjectReference Include="..\..\McsRedis\Redis\Redis.csproj" />

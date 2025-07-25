@@ -57,7 +57,7 @@ namespace McsMqtt.Connection
                 {
                     var options = new MqttClientOptionsBuilder()
                         .WithClientId("telemetry")
-                        .WithTcpServer(_settings.Host, _settings.Port)
+                        .WithTcpServer(_settings.IpAddress, _settings.Port)
                         .Build();
 
                     _mqttClient.ConnectAsync(options, CancellationToken.None).Wait();

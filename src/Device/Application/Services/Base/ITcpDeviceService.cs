@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using McsCore.AppDbContext;
+using McsMqtt.Producer;
 
 namespace Application.Services.Base
 {
@@ -18,6 +20,7 @@ namespace Application.Services.Base
         Task<TcpDeviceResponses> GetTcpDeviceByIpAndPort(string ipAddress, int port);
         Task AddTcpDevice(TcpDeviceModel tcpDeviceModel);
         Task UpdateTcpDevice(Guid id, TcpDeviceModel tcpDeviceModel);
+        Task StartTcpDeviceCommunication(Guid id);
         Task DeleteTcpDevice(Guid id);
     }
 }

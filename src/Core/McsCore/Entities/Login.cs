@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace McsCore.Entities
 {
-    public class Users
+    public class Login
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid UserId { get; set; }
+        public DateTime LoginDate { get; set; }
+        public DateTime LogoutDate { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public DateTime CreateDate { get; set; }
     }
 }

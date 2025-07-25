@@ -5,6 +5,7 @@ using AutoMapper;
 using McsCore.AppDbContext;
 using McsCore.Entities;
 using McsMqtt.Producer;
+using McsUserLogs.Services.Base;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace Application.Services
         private readonly MqttProducer _mqtt;
         private readonly McsAppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IUserLogService _userLog;
 
-        public SnmpDeviceService(MqttProducer mqtt, McsAppDbContext dbContext, IMapper mapper)
+        public SnmpDeviceService(MqttProducer mqtt, McsAppDbContext dbContext, IMapper mapper, IUserLogService userLog)
         {
             _mqtt = mqtt;
             _dbContext = dbContext;
             _mapper = mapper;
+            _userLog = userLog;
         }
 
         public async Task<List<SnmpDeviceResponses>> GetAllSnmpDevice()
@@ -91,6 +94,14 @@ namespace Application.Services
         public async Task StartSnmpCommunication(Guid id)
         {
             _mqtt.PublishMessage($"snmp/start/{id}", "Start SNMP Communication");
+            await _userLog.SetEventUserLog(new UserLogs
+            {
+                UserId = Guid.NewGuid(), // Replace with actual user ID
+                AppName= "Snmp Device Service",
+                Message= $"Started SNMP communication for device with ID: {id}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Updated
+            });
         }
 
         public async Task StopSnmpCommunication(Guid id)

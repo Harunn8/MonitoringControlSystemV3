@@ -29,7 +29,7 @@ namespace McsCore.AppDbContext
             var optionsBuilder = new DbContextOptionsBuilder<McsAppDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
 
-            return new McsAppDbContext(optionsBuilder.Options);
+            return new McsAppDbContext(optionsBuilder.Options); 
         }
     }
 }
