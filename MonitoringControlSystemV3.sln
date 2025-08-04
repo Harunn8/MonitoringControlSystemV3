@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RuleAPI", "RuleAPI", "{9627
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{77272E87-0859-4585-AE86-5495CA4DB16C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Rule\Application\Application\Application.csproj", "{E4C0E188-A58A-42DD-A2DF-9A69402B4262}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleApplication", "src\Rule\Application\Application\RuleApplication.csproj", "{E4C0E188-A58A-42DD-A2DF-9A69402B4262}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleAPI", "src\Rule\RuleAPI\RuleAPI\RuleAPI.csproj", "{5ED68BA7-7251-48DD-9E3E-E2616657986A}"
 EndProject
@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeviceAPI", "DeviceAPI", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{3A7AECEA-2B6E-4CEE-BA0D-652771AEF26C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Device\Application\Application.csproj", "{8267D975-392A-4618-8BFC-B2CC6024A75F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceApplication", "src\Device\Application\DeviceApplication.csproj", "{8267D975-392A-4618-8BFC-B2CC6024A75F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceAPI", "src\Device\DeviceAPI\DeviceAPI\DeviceAPI.csproj", "{5B4F2C49-36A6-4DBE-A83E-6033C13B5B67}"
 EndProject
@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationAPI", "NotificationAPI", "{991B2CCC-C542-4666-BA44-DB01105A8863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Notification\Application\Application\Application.csproj", "{F304BF12-135B-4A16-A60F-7CDB904ECFAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationApplication", "src\Notification\Application\Application\NotificationApplication.csproj", "{F304BF12-135B-4A16-A60F-7CDB904ECFAA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAPI", "src\Notification\NotificationAPI\NotificationAPI\NotificationAPI.csproj", "{E211F45C-23CE-44BA-A8FC-0BBFB8041708}"
 EndProject
@@ -49,7 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LoginAPI", "LoginAPI", "{C3D23DAB-D647-4B37-9684-7A21E41AB2C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Login\Application\Application\Application.csproj", "{857F6429-C506-40DF-AC99-EF9FD072DE95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginApplication", "src\Login\Application\Application\LoginApplication.csproj", "{857F6429-C506-40DF-AC99-EF9FD072DE95}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginAPI", "src\Login\LoginAPI\LoginAPI\LoginAPI.csproj", "{7C179A37-DAC2-4B1C-8475-F0029E32B59D}"
 EndProject
@@ -58,8 +58,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{AB3AB112-3B5F-4F04-819A-45F291335D17}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserAPI", "UserAPI", "{EE54E4B7-2311-4BC2-8A6E-E59A0EA9F00D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\User\Application\Application\Application.csproj", "{9E7B4467-15CC-4BC2-88B6-B9284A2F8BD9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAPI", "src\User\UserAPI\UserAPI\UserAPI.csproj", "{62F398C6-1EBB-41D9-B981-48B7DC2E2AB7}"
 EndProject
@@ -72,6 +70,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logger", "Logger", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McsUserLogs", "src\Common\Logger\McsUserLogs\McsUserLogs.csproj", "{4CF4D840-1245-4093-A957-D4B1913C6146}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserApplication", "src\User\Application\userApplication\UserApplication.csproj", "{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,10 +111,6 @@ Global
 		{7C179A37-DAC2-4B1C-8475-F0029E32B59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C179A37-DAC2-4B1C-8475-F0029E32B59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C179A37-DAC2-4B1C-8475-F0029E32B59D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E7B4467-15CC-4BC2-88B6-B9284A2F8BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E7B4467-15CC-4BC2-88B6-B9284A2F8BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E7B4467-15CC-4BC2-88B6-B9284A2F8BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E7B4467-15CC-4BC2-88B6-B9284A2F8BD9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62F398C6-1EBB-41D9-B981-48B7DC2E2AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62F398C6-1EBB-41D9-B981-48B7DC2E2AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62F398C6-1EBB-41D9-B981-48B7DC2E2AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -135,6 +131,10 @@ Global
 		{4CF4D840-1245-4093-A957-D4B1913C6146}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CF4D840-1245-4093-A957-D4B1913C6146}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CF4D840-1245-4093-A957-D4B1913C6146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,13 +167,13 @@ Global
 		{5CAA2AFB-A965-4DE8-9D9C-E09379AC47F7} = {9419D0C6-44C5-43E9-B8AC-E1E9C54E82CF}
 		{AB3AB112-3B5F-4F04-819A-45F291335D17} = {5CAA2AFB-A965-4DE8-9D9C-E09379AC47F7}
 		{EE54E4B7-2311-4BC2-8A6E-E59A0EA9F00D} = {5CAA2AFB-A965-4DE8-9D9C-E09379AC47F7}
-		{9E7B4467-15CC-4BC2-88B6-B9284A2F8BD9} = {AB3AB112-3B5F-4F04-819A-45F291335D17}
 		{62F398C6-1EBB-41D9-B981-48B7DC2E2AB7} = {EE54E4B7-2311-4BC2-8A6E-E59A0EA9F00D}
 		{78AD90CA-3AD2-4136-A9F5-093F1CD52928} = {88C614E6-4B1E-493D-8CCB-2AD7AC35B6F7}
 		{713277EA-5404-42D1-8EF9-7D427CD07424} = {7620B4C1-3668-4CB7-881B-E1D2E67C7E14}
 		{584F64B6-80F1-4661-81EE-72B2E1415003} = {F5586FC8-07F2-4334-B3FF-575988E1D648}
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {5AB8BCA7-CCCC-417A-803F-6D63125B6E48}
 		{4CF4D840-1245-4093-A957-D4B1913C6146} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE} = {AB3AB112-3B5F-4F04-819A-45F291335D17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58F7A8DB-998F-423F-A7C1-6C5B0037B04A}

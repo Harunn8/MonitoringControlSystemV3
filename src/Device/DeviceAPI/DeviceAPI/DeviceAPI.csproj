@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\McsCore\McsCore.csproj" />
     <ProjectReference Include="..\..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
-    <ProjectReference Include="..\..\Application\Application.csproj" />
+    <ProjectReference Include="..\..\Application\DeviceApplication.csproj" />
   </ItemGroup>
 
 </Project>

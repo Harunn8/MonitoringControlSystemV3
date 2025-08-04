@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Models
+namespace LoginApplication.Models
 {
     public class LoginModel : LoginModels
     {

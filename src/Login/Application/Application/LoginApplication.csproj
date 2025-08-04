@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="5.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -13,6 +14,7 @@
     <ProjectReference Include="..\..\..\Core\McsCore\McsCore.csproj" />
     <ProjectReference Include="..\..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
     <ProjectReference Include="..\..\..\McsRedis\Redis\Redis.csproj" />
+    <ProjectReference Include="..\..\..\User\Application\userApplication\UserApplication.csproj" />
   </ItemGroup>
 
 </Project>

@@ -86,7 +86,7 @@ namespace Application.Services
 
         public async Task UpdateSnmpDevice(Guid id, SnmpDevice snmpDeviceModel)
         {
-            var entity = await _dbContext.SnmpDevices.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var entity = await GetSnmpDeviceById(id);
             _dbContext.Update(snmpDeviceModel);
             await _dbContext.SaveChangesAsync();
         }

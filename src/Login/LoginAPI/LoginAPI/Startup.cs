@@ -1,6 +1,12 @@
+using AutoMapper;
+using LoginApplication.Mapper;
+using LoginApplication.Services;
+using LoginApplication.Services.Base;
+using McsCore.AppDbContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserApplication.Mapper;
+using UserApplication.Services;
+using UserApplication.Services.Base;
 
 namespace LoginAPI
 {
@@ -25,6 +34,14 @@ namespace LoginAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IUserService, UserService>();
+
+            Console.WriteLine("LOGIN API STARTED");
+            services.AddDbContext<McsAppDbContext>(options => options.UseNpgsql(
+            Configuration.GetConnectionString("Postgres")));
+
+            services.AddAutoMapper(typeof(LoginMappingProfile));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -1,6 +1,12 @@
+using UserApplication.Mapper;
+using UserApplication.Services;
+using UserApplication.Services.Base;
+using AutoMapper;
+using McsCore.AppDbContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +31,14 @@ namespace UserAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            Console.WriteLine("USER API STARTED");
+            services.AddDbContext<McsAppDbContext>(options => options.UseNpgsql(
+            Configuration.GetConnectionString("Postgres")));
+
+            services.AddAutoMapper(typeof(UserMappingProfile));
+
+            services.AddScoped<IUserService, UserService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

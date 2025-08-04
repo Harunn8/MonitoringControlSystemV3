@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Services.Base
+namespace LoginApplication.Services.Base
 {
     public interface ILoginService
     {
-        Task<bool> LoginAsync(string username, string password);
+        Task<bool> ValidateUser(string userName , string password);
         Task<bool> LogOutAsync(Guid id);
+        string GenerateJwtToken(string userName);
     }
 }
