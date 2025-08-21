@@ -1,12 +1,14 @@
-﻿using System;
+﻿using McsCore.Entities;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models
 {
-    internal class RuleModels
+    public class AlarmModel : Alarms
     {
     }
 }

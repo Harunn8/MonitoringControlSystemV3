@@ -10,58 +10,30 @@ namespace McsCore.Entities
 {
     public class Alarms
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
-        [BsonElement("AlarmName")]
-        public string AlarmName { get; set; }
-
-        [BsonElement("AlarmDescription")]
-        public string AlarmDescription { get; set; }
-
-        [BsonElement("Severity")]
-        public int Severity { get; set; }
-
-        [BsonElement("AlarmCreateDate")]
-        public DateTime AlarmCreateTime { get; set; }
-
-        [BsonElement("AlarmFixedDate")]
-        public DateTime FixedDate { get; set; }
-
-        [BsonElement("DeviceId")]
-        public string DeviceId { get; set; }
-
-        [BsonElement("IsActive")]
-        public bool IsAlarmActive { get; set; }
-
-        [BsonElement("ısFixed")]
-        public bool IsAlarmFixed { get; set; }
-
-        [BsonElement("IsMasked")]
-        public bool IsMasked { get; set; }
-
-        [BsonElement("AlarmCondition")]
-        public string AlarmCondition { get; set; }
-
-        [BsonElement("AlarmThreshold")]
-        public string AlarmThreshold { get; set; }
-
-        [BsonElement("Device Type")]
-        public string DeviceType { get; set; }
-
-        [BsonElement("AlarmStatus")]
-        public AlarmType AlarmStatus { get; set; }
-
-        [BsonElement("ParameterId")]
-        public string ParameterId { get; set; }
-        [BsonElement("UpdateDate")]
-        public DateTime UpdatedDate { get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public Guid DeviceId { get; set; }
+        public string DeviceName { get; set; }
+        public Guid ParameterId { get; set; }
+        public string ParameterName { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsFixed { get; set; } 
+        public string Description { get; set; }
+        public string Threshold { get; set; }
+        public string Condition { get; set; }
+        public Severity Severity { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime UpdateDate { get; set; }
     }
 
-    public enum AlarmType
+    public enum Severity
     {
-        Passive = 0,
-        Active = 1
+        Information = 0,
+        Warning = 1,
+        Low = 2,
+        Error = 3,
+        Medium = 4,
+        High = 5,
+        CriticalHigh = 6
     }
 }

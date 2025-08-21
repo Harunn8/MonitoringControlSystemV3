@@ -8,7 +8,7 @@ namespace McsCore.Entities
 {
     public class SystemLogs
     {
-        public string DeviceId { get; set; }
+        public Guid DeviceId { get; set; }
         public string Message { get; set; }
         public DateTime LogDate { get; set; }
         public LogType LogType { get; set; }

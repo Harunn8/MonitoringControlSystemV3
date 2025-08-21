@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    [Migration("20250715213546_InitialCreateee")]
-    partial class InitialCreateee
+    [Migration("20250821091550_NewLogDeviceId")]
+    partial class NewLogDeviceId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,6 +21,56 @@ namespace McsCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            modelBuilder.Entity("McsCore.Entities.Alarms", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Condition")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsFixed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ParameterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ParameterName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Threshold")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Alarms");
+                });
 
             modelBuilder.Entity("McsCore.Entities.OidMapping", b =>
                 {
@@ -137,6 +187,9 @@ namespace McsCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Password")
                         .HasColumnType("text");

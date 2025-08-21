@@ -16,5 +16,6 @@ namespace McsCore.AppDbContext
         public DbSet<TcpDevice> TcpDevices { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Scripts> Scripts { get; set; }
+        public DbSet<Alarms> Alarms { get; set; }
     }
 }
