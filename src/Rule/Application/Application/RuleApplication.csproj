@@ -1,15 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Base\" />
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Logger\McsUserLogs\McsUserLogs.csproj" />
     <ProjectReference Include="..\..\..\Core\McsCore\McsCore.csproj" />
+    <ProjectReference Include="..\..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
+    <ProjectReference Include="..\..\..\McsRedis\Redis\Redis.csproj" />
   </ItemGroup>
 
 </Project>

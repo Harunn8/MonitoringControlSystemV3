@@ -11,14 +11,14 @@ namespace RuleApplication.Services.Base
 {
     public interface IAlarmService
     {
-        Task<AlarmResponse> GetAllAlarm();
+        Task<List<AlarmResponse>> GetAllAlarm();
         Task<AlarmResponse> GetAlarmById(Guid id);
-        Task<AlarmResponse> GetAlarmByDateRange(DateTime startDate, DateTime endDate);
-        Task<AlarmResponse> GetAlarmByStatus(Severity status);
-        Task<AlarmResponse> GetAlarmByDeviceId(Guid deviceId);
-        Task<AlarmResponse> GetAlarmByParameterId(Guid parameterId);
+        Task<List<AlarmResponse>> GetAlarmByDateRange(DateTime startDate, DateTime endDate);
+        Task<List<AlarmResponse>> GetAlarmByStatus(Severity status);
+        Task<List<AlarmResponse>> GetAlarmByDeviceId(Guid deviceId);
+        Task<List<AlarmResponse>> GetAlarmByParameterId(Guid parameterId);
         Task AddAlarm(AlarmModel alarm);
-        Task UpdateAlarm(AlarmModel alarm);
+        Task UpdateAlarm(Guid id,AlarmModel alarm);
         Task DeleteAlarm(Guid id);
 
     }

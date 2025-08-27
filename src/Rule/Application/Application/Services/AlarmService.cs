@@ -1,4 +1,5 @@
 ﻿using Application.Models;
+using AutoMapper;
 using McsCore.AppDbContext;
 using McsCore.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,6 @@ using RuleApplication.Services.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RuleApplication.Services
@@ -15,6 +15,7 @@ namespace RuleApplication.Services
     public class AlarmService : IAlarmService
     {
         private readonly McsAppDbContext _dbContext;
+        private readonly IMapper _mapper;
 
         public AlarmService(McsAppDbContext dbContext)
         {
@@ -30,41 +31,63 @@ namespace RuleApplication.Services
         public async Task DeleteAlarm(Guid id)
         {
             var entity = _dbContext.Alarms.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity != null)
+            {
+                _dbContext.Alarms.Remove(entity.Result);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
-        public Task<AlarmResponse> GetAlarmByDateRange(DateTime startDate, DateTime endDate)
+        public async Task<List<AlarmResponse>> GetAlarmByDateRange(DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            var entites = await _dbContext.Alarms.Where(x => x.CreateDate>= startDate && x.CreateDate <= endDate).ToListAsync();
+            var response = _mapper.Map<List<AlarmResponse>>(entites);
+            return response;
         }
 
-        public Task<AlarmResponse> GetAlarmByDeviceId(Guid deviceId)
+        public async Task<List<AlarmResponse>> GetAlarmByDeviceId(Guid deviceId)
         {
-            throw new NotImplementedException();
+            var entites = await _dbContext.Alarms.Where(x => x.DeviceId == deviceId).ToListAsync();
+            var response = _mapper.Map<List<AlarmResponse>>(entites);
+            return response;
         }
 
-        public Task<AlarmResponse> GetAlarmById(Guid id)
+        public async Task<AlarmResponse> GetAlarmById(Guid id)
         {
-            throw new NotImplementedException();
+            var entity =  await _dbContext.Alarms.FirstOrDefaultAsync(x => x.Id == id);
+            var response = _mapper.Map<AlarmResponse>(entity);
+            return response;
         }
 
-        public Task<AlarmResponse> GetAlarmByParameterId(Guid parameterId)
+        public async Task<List<AlarmResponse>> GetAlarmByParameterId(Guid parameterId)
         {
-            throw new NotImplementedException();
+            var entites =  await _dbContext.Alarms.Where(x => x.ParameterId == parameterId).ToListAsync();
+            var response = _mapper.Map<List<AlarmResponse>>(entites);
+            return response;
         }
 
-        public Task<AlarmResponse> GetAlarmByStatus(Severity status)
+        public async Task<List<AlarmResponse>> GetAlarmByStatus(Severity status)
         {
-            throw new NotImplementedException();
+           var entites =  await _dbContext.Alarms.Where(x => x.Severity == status).ToListAsync();
+            var response = _mapper.Map<List<AlarmResponse>>(entites);
+            return response;
         }
 
-        public Task<AlarmResponse> GetAllAlarm()
+        public async Task<List<AlarmResponse>> GetAllAlarm()
         {
-            throw new NotImplementedException();
+            var entites =  await _dbContext.Alarms.ToListAsync();
+            var response = _mapper.Map<List<AlarmResponse>>(entites);
+            return response;
         }
 
-        public Task UpdateAlarm(AlarmModel alarm)
+        public async Task UpdateAlarm(Guid id,AlarmModel alarm)
         {
-            throw new NotImplementedException();
+            var existingAlarm = await GetAlarmById(id);
+            if (alarm != null)
+            {
+                _dbContext.Alarms.Update(alarm);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

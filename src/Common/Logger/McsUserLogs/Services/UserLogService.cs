@@ -29,7 +29,15 @@ namespace McsUserLogs.Services
 
         public async Task SetEventUserLog(UserLogs log)
         {
-            await _userLogs.InsertOneAsync(log);    
+            try
+            {
+                await _userLogs.InsertOneAsync(log);
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
         public async Task<List<McsUserLogResponse>> GetUserLogByUserId(Guid userId)
         {

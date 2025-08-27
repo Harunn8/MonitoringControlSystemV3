@@ -11,9 +11,10 @@ namespace McsCore.Entities
     public class UserLogs
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        [BsonElement("UserId")]
+        [BsonRepresentation(BsonType.String)]
+        public Guid Id { get; set; }
+
+        [BsonRepresentation(BsonType.String)]
         public Guid UserId { get; set; }
         [BsonElement("AppName")]
         public string AppName { get; set; }
