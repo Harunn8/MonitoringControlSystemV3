@@ -7,6 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
+using Aes = System.Security.Cryptography.Aes;
+using System.IO;
 
 namespace UserApplication.Services
 {
@@ -14,6 +19,8 @@ namespace UserApplication.Services
     {
         private readonly McsAppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private static readonly string key = "BoQxCC547889_!uYzERtwqX25PerQ@%/";
+        private static readonly string IV = "Xert%7548qxYvBNa";
         public UserService(McsAppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -41,7 +48,7 @@ namespace UserApplication.Services
         public async Task<UsersModel> GetUserByName(string userName)
         {
             var entity = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
-            if(entity != null)
+            if (entity != null)
             {
                 var user = _mapper.Map<UsersModel>(entity);
                 return user;
@@ -56,7 +63,7 @@ namespace UserApplication.Services
             {
                 Id = Guid.NewGuid(),
                 UserName = userModel.UserName,
-                Password = userModel.Password,
+                Password = Encrypt(userModel.Password),
                 CreateDate = DateTime.Now
             };
             await _dbContext.Users.AddAsync(user);
@@ -68,15 +75,63 @@ namespace UserApplication.Services
         public async Task DeleteUser(Guid id)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
-              _dbContext.Users.Remove(user);
-              _dbContext.SaveChanges();
+            _dbContext.Users.Remove(user);
+            _dbContext.SaveChanges();
         }
 
         public async Task UpdateUser(Guid id, Users userModel)
         {
-            var user  = await GetUserByIdAsync(id);
+            var user = await GetUserByIdAsync(id);
             _dbContext.Update(userModel);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public string Encrypt(string hashingPassword)
+        {
+            byte[] keys = Encoding.UTF8.GetBytes(key);
+            byte[] iv = Encoding.UTF8.GetBytes(IV);
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = keys;
+                aes.IV = iv;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        using (var writer = new StreamWriter(cryptoStream, Encoding.UTF8, 1024, leaveOpen: true))
+                        {
+                            writer.Write(hashingPassword);
+                        }
+                        cryptoStream.FlushFinalBlock();
+                        return Convert.ToBase64String(memoryStream.ToArray());
+                    }
+                }
+            }
+        }
+
+        public string Decrypt(string encryptedText)
+        {
+            byte[] keys = Encoding.UTF8.GetBytes(key);
+            byte[] iv = Encoding.UTF8.GetBytes(IV);
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = keys;
+                aes.IV = iv;
+
+                using (var memoryStream = new MemoryStream(Convert.FromBase64String(encryptedText)))
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        using (var reader = new StreamReader(cryptoStream))
+                        {
+                            return reader.ReadToEnd();
+                        }
+                    }
+                }
+            }
         }
     }
 }

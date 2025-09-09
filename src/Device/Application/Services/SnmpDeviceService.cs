@@ -75,13 +75,29 @@ namespace Application.Services
         {
             await _dbContext.AddAsync(snmpDeviceModel);
             _dbContext.SaveChanges();
-
+            await _userLog.SetEventUserLog(new UserLogs
+            {
+                UserId = Guid.NewGuid(),
+                AppName= "Snmp Device Service",
+                Message= $"Added new SNMP device: {snmpDeviceModel.DeviceName}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Added
+            });
         }
 
         public async Task DeleteSnmpDevice(Guid id)
         {
+            var device = await GetSnmpDeviceById(id);
             _dbContext.Remove(id);
             await _dbContext.SaveChangesAsync();
+            await _userLog.SetEventUserLog(new UserLogs
+            {
+                UserId = Guid.NewGuid(),
+                AppName= "Snmp Device Service",
+                Message= $"Deleted SNMP device : {device.DeviceName}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Deleted
+            });
         }
 
         public async Task UpdateSnmpDevice(Guid id, SnmpDevice snmpDeviceModel)
@@ -93,12 +109,13 @@ namespace Application.Services
 
         public async Task StartSnmpCommunication(Guid id)
         {
+            var device = await GetSnmpDeviceById(id);
             _mqtt.PublishMessage($"snmp/start/{id}", "Start SNMP Communication");
             await _userLog.SetEventUserLog(new UserLogs
             {
                 UserId = Guid.NewGuid(), // Replace with actual user ID
                 AppName= "Snmp Device Service",
-                Message= $"Started SNMP communication for device with ID: {id}",
+                Message= $"Started SNMP communication for : {device.DeviceName}",
                 LogDate = DateTime.UtcNow,
                 LogType = UserLogType.Updated
             });
@@ -106,7 +123,16 @@ namespace Application.Services
 
         public async Task StopSnmpCommunication(Guid id)
         {
+            var device = await GetSnmpDeviceById(id);
             _mqtt.PublishMessage($"snmp/stop/{id}", "Start SNMP Communication");
+            await _userLog.SetEventUserLog(new UserLogs
+            {
+                UserId = Guid.NewGuid(), // Replace with actual user ID
+                AppName = "Snmp Device Service",
+                Message = $"Stopped SNMP communication for {device.DeviceName}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Updated
+            });
         }
     }
 }

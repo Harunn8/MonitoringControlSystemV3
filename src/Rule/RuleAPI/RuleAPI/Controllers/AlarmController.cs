@@ -3,6 +3,7 @@ using McsMqtt.Producer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RuleApplication.Services.Base;
+using RuleApplication.Validations;
 using Serilog;
 using System;
 using System.Threading.Tasks;
@@ -15,11 +16,13 @@ namespace RuleAPI.Controllers
     {
         private readonly IAlarmService _alarmService;
         private readonly MqttProducer _mqtt;
+        private readonly AlarmValidator _validator;
 
-        public AlarmController(IAlarmService alarmService, MqttProducer mqtt)
+        public AlarmController(IAlarmService alarmService, MqttProducer mqtt, AlarmValidator validator)
         {
             _alarmService = alarmService;
             _mqtt = mqtt;
+            _validator = validator;
         }
 
         [HttpGet("GetAllAlarm")]
@@ -71,33 +74,44 @@ namespace RuleAPI.Controllers
         [HttpPost("AddAlarm")]
         public async Task<ActionResult> AddAlarm([FromBody] Application.Models.AlarmModel alarm)
         {
-            try
+            var validator =  _validator.Validate(alarm);
+
+            if(validator.IsValid)
             {
-                await _alarmService.AddAlarm(alarm);
-                _mqtt.PublishMessage("alarm/created", $"Alarm created with ID: {alarm.Id}");
-                return Ok("Alarm added successfully");
+                try
+                {
+                    await _alarmService.AddAlarm(alarm);
+                    _mqtt.PublishMessage("alarm/created", $"Alarm created with ID: {alarm.Id}");
+                    return Ok("Alarm added successfully");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error adding alarm");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Error adding alarm");
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error adding alarm");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error adding alarm");
-            }
+           return BadRequest(validator.Errors);
         }
 
         [HttpPut("UpdateAlarm/{id}")]
         public async Task<ActionResult> UpdateAlarm(Guid id, [FromBody] AlarmModel alarm)
         {
-            try
+            var validator = _validator.Validate(alarm);
+            if(validator.IsValid)
             {
-                await _alarmService.UpdateAlarm(id, alarm);
-                _mqtt.PublishMessage("alarm/updated", $"Alarm updated with ID: {id}");
-                return Ok("Alarm updated successfully");
+                try
+                {
+                    await _alarmService.UpdateAlarm(id, alarm);
+                    _mqtt.PublishMessage("alarm/updated", $"Alarm updated with ID: {id}");
+                    return Ok("Alarm updated successfully");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error updating alarm");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Error updating alarm");
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error updating alarm");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating alarm");
-            }
+            return BadRequest(validator.Errors);
         }
     }
 }

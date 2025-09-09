@@ -17,10 +17,10 @@ namespace LoginApplication.Services
 {
     public class LoginService : ILoginService
     {
-        private readonly IUserService _userService;
+        private readonly UserService _userService;
         private readonly string _jwtKey;
 
-        public LoginService(IUserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration)
+        public LoginService(UserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _userService = userService;
             _jwtKey = configuration["jwt:Key"];
@@ -34,7 +34,7 @@ namespace LoginApplication.Services
                 return false;
             }
 
-            if (user.UserName == userName &&user.Password == password)
+            if (user.UserName == userName && _userService.Decrypt(user.Password)== password)
             {
                 return true;
             }

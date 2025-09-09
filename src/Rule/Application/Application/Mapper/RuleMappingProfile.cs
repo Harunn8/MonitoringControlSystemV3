@@ -1,5 +1,6 @@
 ﻿using Application.Models;
 using AutoMapper;
+using McsCore.Entities;
 using RuleApplication.Models;
 using RuleApplication.Responses;
 using System;
@@ -14,7 +15,8 @@ namespace RuleApplication.Mapper
     {
         public RuleMappingProfile()
         {
-            CreateMap<AlarmModel,AlarmResponse>().ReverseMap();
+            CreateMap<Scripts, ScriptModel>().ReverseMap();
+            CreateMap<Scripts, ScriptResponse>().ReverseMap();
             CreateMap<ScriptModel, ScriptResponse>().ReverseMap();
         }
     }

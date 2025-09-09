@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RuleApplication.Models;
 using RuleApplication.Services.Base;
+using RuleApplication.Validations;
 using System;
 using System.Threading.Tasks;
 
@@ -11,10 +13,12 @@ namespace RuleAPI.Controllers
     public class PolicyScriptController : ControllerBase
     {
         private readonly IPolicyScriptService _policyScriptService;
+        private readonly PolicyScriptValidator _validator;
 
-        public PolicyScriptController(IPolicyScriptService policyScriptService)
+        public PolicyScriptController(IPolicyScriptService policyScriptService, PolicyScriptValidator validator)
         {
             _policyScriptService = policyScriptService;
+            _validator = validator;
         }
 
         [HttpGet("GetAllScript")]
@@ -48,17 +52,21 @@ namespace RuleAPI.Controllers
         [HttpPost("CreateScript")]
         public async Task<ActionResult> CreateScript([FromBody] ScriptModel model)
         {
-            // Validation eklenecek...
+             var validation = _validator.Validate(model);
 
-            try
+            if(validation.IsValid)
             {
-                await _policyScriptService.CreateScript(model);
-                return Ok("Alarm added successfully");
+                try
+                {
+                    await _policyScriptService.CreateScript(model);
+                    return Ok("Alarm added successfully");
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"Script could not add: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Script could not add: {ex.Message}");
-            }
+           return BadRequest(validation.Errors);
         }
 
         [HttpPut("UpdateScript/{id}")]
@@ -74,6 +82,18 @@ namespace RuleAPI.Controllers
             {
                 return StatusCode(500, $"Script could not update: {ex.Message}");
             }
+        }
+
+        [HttpPut("RunPolicyScript/{id}")]
+        public async Task<IActionResult> RunPolicyScript(Guid id)
+        {
+            var script = await _policyScriptService.GetScriptById(id);
+            if(script != null)
+            {
+                var status = await _policyScriptService.RunPolicyScript(id);
+                if(status) return Ok("Script running");
+            }
+            return BadRequest("Script not running");
         }
     }
 }

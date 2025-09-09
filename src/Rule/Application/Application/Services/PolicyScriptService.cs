@@ -10,6 +10,7 @@ using RuleApplication.Services.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RuleApplication.Services
@@ -90,7 +91,8 @@ namespace RuleApplication.Services
             var script = await GetScriptById(id);
             if (script != null)
             {
-                _mqtt.PublishMessage("policy/script/run", $"{script.Id},{script.ScriptName},{script.Script}");
+                var sendingScript = JsonSerializer.Serialize(script);
+                _mqtt.PublishMessage("policyScript/start", $"{sendingScript}");
                 return true;
             }
             return false;

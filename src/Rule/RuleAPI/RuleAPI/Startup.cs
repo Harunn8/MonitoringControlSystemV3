@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using MQTTnet;
@@ -23,6 +24,7 @@ using MQTTnet.Client.Options;
 using RuleApplication.Mapper;
 using RuleApplication.Services;
 using RuleApplication.Services.Base;
+using RuleApplication.Validations;
 using Serilog;
 
 namespace RuleAPI
@@ -46,25 +48,26 @@ namespace RuleAPI
 
             services.Configure<MqttSettings>(Configuration.GetSection("Mqtt"));
 
-            services.AddScoped<IMqttClientOptions>(sp =>
+            services.AddSingleton<IMqttClientOptions>(sp =>
             {
-                var config = sp.GetRequiredService<IConfiguration>()
-                               .GetSection("Mqtt")
-                               .Get<MqttSettings>();
+                var settings = sp.GetRequiredService<IOptions<MqttSettings>>().Value;
 
                 return new MqttClientOptionsBuilder()
                     .WithClientId("telemetry")
-                    .WithTcpServer(config.IpAddress, config.Port)
+                    .WithTcpServer(settings.IpAddress, settings.Port)
+                    .WithCleanSession()
                     .Build();
             });
 
+            // MQTT client => Singleton
             services.AddSingleton<IMqttClient>(sp =>
             {
                 var factory = new MqttFactory();
                 return factory.CreateMqttClient();
             });
 
-            services.AddScoped<IMqttConnection, MqttConnection>();
+            // Producer sarmalayýcý => Singleton
+            services.AddSingleton<IMqttConnection, MqttConnection>();
             services.AddScoped<MqttProducer>();
 
             Log.Information("Mqtt connection was establish");
@@ -104,6 +107,9 @@ namespace RuleAPI
             services.AddScoped<IAlarmService, AlarmService>();
             services.AddScoped<IPolicyScriptService, PolicyScriptService>();
             services.AddScoped<IUserLogService, UserLogService>();
+
+            services.AddTransient<PolicyScriptValidator>();
+            services.AddTransient<AlarmValidator>();
 
             #endregion
 

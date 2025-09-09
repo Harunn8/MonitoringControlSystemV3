@@ -5,6 +5,7 @@ using McsCore.Entities;
 using Microsoft.EntityFrameworkCore;
 using RuleApplication.Responses;
 using RuleApplication.Services.Base;
+using RuleApplication.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace RuleApplication.Services
     {
         private readonly McsAppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly AlarmValidator _validator;
 
-        public AlarmService(McsAppDbContext dbContext)
+        public AlarmService(McsAppDbContext dbContext, AlarmValidator validator)
         {
             _dbContext = dbContext;
+            _validator = validator;
         }
 
         public async Task AddAlarm(AlarmModel alarm)
