@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TokenInformation.Base;
 
 namespace Application.Services
 {
@@ -20,13 +21,15 @@ namespace Application.Services
         private readonly McsAppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IUserLogService _userLog;
+        private readonly ITokenInformationService _tokenInfo;
 
-        public SnmpDeviceService(MqttProducer mqtt, McsAppDbContext dbContext, IMapper mapper, IUserLogService userLog)
+        public SnmpDeviceService(MqttProducer mqtt, McsAppDbContext dbContext, IMapper mapper, IUserLogService userLog, ITokenInformationService tokenInformation)
         {
             _mqtt = mqtt;
             _dbContext = dbContext;
             _mapper = mapper;
             _userLog = userLog;
+            _tokenInfo = tokenInformation;
         }
 
         public async Task<List<SnmpDeviceResponses>> GetAllSnmpDevice()
@@ -77,8 +80,9 @@ namespace Application.Services
             _dbContext.SaveChanges();
             await _userLog.SetEventUserLog(new UserLogs
             {
-                UserId = Guid.NewGuid(),
-                AppName= "Snmp Device Service",
+                UserId = _tokenInfo.UserId,
+                UserName = _tokenInfo.UserName,
+                AppName = "Snmp Device Service",
                 Message= $"Added new SNMP device: {snmpDeviceModel.DeviceName}",
                 LogDate = DateTime.UtcNow,
                 LogType = UserLogType.Added
@@ -92,8 +96,9 @@ namespace Application.Services
             await _dbContext.SaveChangesAsync();
             await _userLog.SetEventUserLog(new UserLogs
             {
-                UserId = Guid.NewGuid(),
-                AppName= "Snmp Device Service",
+                UserId = _tokenInfo.UserId,
+                UserName = _tokenInfo.UserName,
+                AppName = "Snmp Device Service",
                 Message= $"Deleted SNMP device : {device.DeviceName}",
                 LogDate = DateTime.UtcNow,
                 LogType = UserLogType.Deleted
@@ -113,8 +118,9 @@ namespace Application.Services
             _mqtt.PublishMessage($"snmp/start/{id}", "Start SNMP Communication");
             await _userLog.SetEventUserLog(new UserLogs
             {
-                UserId = Guid.NewGuid(), // Replace with actual user ID
-                AppName= "Snmp Device Service",
+                UserId = _tokenInfo.UserId,
+                UserName = _tokenInfo.UserName,
+                AppName = "Snmp Device Service",
                 Message= $"Started SNMP communication for : {device.DeviceName}",
                 LogDate = DateTime.UtcNow,
                 LogType = UserLogType.Updated
@@ -127,7 +133,8 @@ namespace Application.Services
             _mqtt.PublishMessage($"snmp/stop/{id}", "Start SNMP Communication");
             await _userLog.SetEventUserLog(new UserLogs
             {
-                UserId = Guid.NewGuid(), // Replace with actual user ID
+                UserId = _tokenInfo.UserId,
+                UserName = _tokenInfo.UserName,
                 AppName = "Snmp Device Service",
                 Message = $"Stopped SNMP communication for {device.DeviceName}",
                 LogDate = DateTime.UtcNow,

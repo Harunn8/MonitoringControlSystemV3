@@ -16,6 +16,10 @@ namespace McsCore.Entities
 
         [BsonRepresentation(BsonType.String)]
         public Guid UserId { get; set; }
+
+        [BsonElement("UserName")]
+        public string UserName { get; set; }
+
         [BsonElement("AppName")]
         public string AppName { get; set; }
         [BsonElement("Message")]

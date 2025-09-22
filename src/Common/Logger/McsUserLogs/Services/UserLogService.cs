@@ -29,6 +29,8 @@ namespace McsUserLogs.Services
 
         public async Task SetEventUserLog(UserLogs log)
         {
+            // Güncel kullanıcının bilgisini alınarak userModel içerisine yazdırılmalı
+
             try
             {
                 await _userLogs.InsertOneAsync(log);

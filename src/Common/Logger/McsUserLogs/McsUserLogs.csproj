@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\McsCore\McsCore.csproj" />
+    <ProjectReference Include="..\..\..\TokenInformation\TokenInformation\TokenInformation.csproj" />
   </ItemGroup>
 
 </Project>

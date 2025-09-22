@@ -30,6 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TokenInformation.Base;
+using TokenInformation;
 
 
 namespace DeviceAPI
@@ -114,6 +116,10 @@ namespace DeviceAPI
             services.AddScoped<ISnmpDeviceService, SnmpDeviceService>();
             services.AddScoped<ITcpDeviceService, TcpDeviceService>();
             services.AddScoped<IUserLogService, UserLogService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ITokenInformationService, TokenInformationService>();
+
+
 
             #endregion
 

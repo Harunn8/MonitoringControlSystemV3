@@ -73,6 +73,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McsUserLogs", "src\Common\L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserApplication", "src\User\Application\userApplication\UserApplication.csproj", "{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helper", "Helper", "{FB600CBF-C5FB-416B-9AF9-C68D2E05D7DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenInformation", "src\TokenInformation\TokenInformation\TokenInformation.csproj", "{C45D7DE4-3DF2-4FAF-A0C6-FA2450884365}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +139,10 @@ Global
 		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C45D7DE4-3DF2-4FAF-A0C6-FA2450884365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45D7DE4-3DF2-4FAF-A0C6-FA2450884365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C45D7DE4-3DF2-4FAF-A0C6-FA2450884365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C45D7DE4-3DF2-4FAF-A0C6-FA2450884365}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,6 +182,8 @@ Global
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {5AB8BCA7-CCCC-417A-803F-6D63125B6E48}
 		{4CF4D840-1245-4093-A957-D4B1913C6146} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3B7F4597-005E-4662-B5B8-39E0A7B6A0EE} = {AB3AB112-3B5F-4F04-819A-45F291335D17}
+		{FB600CBF-C5FB-416B-9AF9-C68D2E05D7DD} = {9419D0C6-44C5-43E9-B8AC-E1E9C54E82CF}
+		{C45D7DE4-3DF2-4FAF-A0C6-FA2450884365} = {FB600CBF-C5FB-416B-9AF9-C68D2E05D7DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58F7A8DB-998F-423F-A7C1-6C5B0037B04A}

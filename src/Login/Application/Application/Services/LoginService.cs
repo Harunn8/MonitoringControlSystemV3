@@ -12,15 +12,16 @@ using System.Threading.Tasks;
 using UserApplication.Services;
 using UserApplication.Services.Base;
 using Microsoft.Extensions.Configuration;
+using TokenInformation.Base;
 
 namespace LoginApplication.Services
 {
     public class LoginService : ILoginService
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly string _jwtKey;
 
-        public LoginService(UserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration)
+        public LoginService(IUserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _userService = userService;
             _jwtKey = configuration["jwt:Key"];

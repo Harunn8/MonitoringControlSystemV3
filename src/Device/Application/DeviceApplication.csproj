@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\Core\McsCore\McsCore.csproj" />
     <ProjectReference Include="..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
     <ProjectReference Include="..\..\McsRedis\Redis\Redis.csproj" />
+    <ProjectReference Include="..\..\TokenInformation\TokenInformation\TokenInformation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,5 +16,7 @@ namespace UserApplication.Services.Base
         Task<UsersModel> CreateUser(Users userModel);
         Task UpdateUser(Guid id, Users userModel);
         Task DeleteUser(Guid id);
+        public string Encrypt(string hashingPassword);
+        public string Decrypt(string encryptedText);
     }
 }

@@ -92,7 +92,7 @@ namespace RuleApplication.Services
             if (script != null)
             {
                 var sendingScript = JsonSerializer.Serialize(script);
-                _mqtt.PublishMessage("policyScript/start", $"{sendingScript}");
+                _mqtt.PublishMessage("telemetry/policyScript/start", $"{sendingScript}");
                 return true;
             }
             return false;
