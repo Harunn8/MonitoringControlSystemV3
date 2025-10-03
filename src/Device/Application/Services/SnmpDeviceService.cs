@@ -42,6 +42,7 @@ namespace Application.Services
         public async Task<SnmpDeviceResponses> GetSnmpDeviceById(Guid id)
         {
             var entity = await _dbContext.SnmpDevices.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return null;
             var response = _mapper.Map<SnmpDeviceResponses>(entity);
             return response;
         }
@@ -115,31 +116,31 @@ namespace Application.Services
         public async Task StartSnmpCommunication(Guid id)
         {
             var device = await GetSnmpDeviceById(id);
-            _mqtt.PublishMessage($"snmp/start/{id}", "Start SNMP Communication");
-            await _userLog.SetEventUserLog(new UserLogs
-            {
-                UserId = _tokenInfo.UserId,
-                UserName = _tokenInfo.UserName,
-                AppName = "Snmp Device Service",
-                Message= $"Started SNMP communication for : {device.DeviceName}",
-                LogDate = DateTime.UtcNow,
-                LogType = UserLogType.Updated
-            });
+            _mqtt.PublishMessage("SNMP/Start",$"{device}");
+            //await _userLog.SetEventUserLog(new UserLogs
+            //{
+            //    UserId = _tokenInfo.UserId,
+            //    UserName = _tokenInfo.UserName,
+            //    AppName = "Snmp Device Service",
+            //    Message= $"Started SNMP communication for : {device.DeviceName}",
+            //    LogDate = DateTime.UtcNow,
+            //    LogType = UserLogType.Updated
+            //});
         }
 
         public async Task StopSnmpCommunication(Guid id)
         {
             var device = await GetSnmpDeviceById(id);
-            _mqtt.PublishMessage($"snmp/stop/{id}", "Start SNMP Communication");
+            _mqtt.PublishMessage("SNMP/Stop",$"{ device}");
             await _userLog.SetEventUserLog(new UserLogs
-            {
-                UserId = _tokenInfo.UserId,
-                UserName = _tokenInfo.UserName,
-                AppName = "Snmp Device Service",
-                Message = $"Stopped SNMP communication for {device.DeviceName}",
-                LogDate = DateTime.UtcNow,
-                LogType = UserLogType.Updated
-            });
+            //{
+            //    UserId = _tokenInfo.UserId,
+            //    UserName = _tokenInfo.UserName,
+            //    AppName = "Snmp Device Service",
+            //    Message = $"Stopped SNMP communication for {device.DeviceName}",
+            //    LogDate = DateTime.UtcNow,
+            //    LogType = UserLogType.Updated
+            //});
         }
     }
 }
