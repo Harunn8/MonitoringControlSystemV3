@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TokenInformation.Base;
+using Newtonsoft.Json;
+using DeviceApplication.Models;
+using MongoDB.Driver;
 
 namespace Application.Services
 {
@@ -41,7 +44,7 @@ namespace Application.Services
 
         public async Task<SnmpDeviceResponses> GetSnmpDeviceById(Guid id)
         {
-            var entity = await _dbContext.SnmpDevices.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var entity = await _dbContext.SnmpDevices.Include(x => x.OidList).Where(x => x.Id == id).FirstOrDefaultAsync();
             if (entity == null) return null;
             var response = _mapper.Map<SnmpDeviceResponses>(entity);
             return response;
@@ -49,7 +52,7 @@ namespace Application.Services
 
         public async Task<SnmpDeviceResponses> GetSnmpDeviceByIp(string ipAddress)
         {
-            var entity = await _dbContext.SnmpDevices.Where(x => x.IpAddress == ipAddress).FirstOrDefaultAsync();
+            var entity = await _dbContext.SnmpDevices.Include(x => x.OidList).Where(x => x.IpAddress == ipAddress).FirstOrDefaultAsync();
             var response = _mapper.Map<SnmpDeviceResponses>(entity);
             return response;
         }
@@ -81,10 +84,9 @@ namespace Application.Services
             _dbContext.SaveChanges();
             await _userLog.SetEventUserLog(new UserLogs
             {
-                UserId = _tokenInfo.UserId,
-                UserName = _tokenInfo.UserName,
+                UserName = _tokenInfo.UserName ?? "MCSAdmin",
                 AppName = "Snmp Device Service",
-                Message= $"Added new SNMP device: {snmpDeviceModel.DeviceName}",
+                Message = $"Added new SNMP device: {snmpDeviceModel.DeviceName}",
                 LogDate = DateTime.UtcNow,
                 LogType = UserLogType.Added
             });
@@ -97,8 +99,7 @@ namespace Application.Services
             await _dbContext.SaveChangesAsync();
             await _userLog.SetEventUserLog(new UserLogs
             {
-                UserId = _tokenInfo.UserId,
-                UserName = _tokenInfo.UserName,
+                UserName = _tokenInfo.UserName ?? "MCSAdmin",
                 AppName = "Snmp Device Service",
                 Message= $"Deleted SNMP device : {device.DeviceName}",
                 LogDate = DateTime.UtcNow,
@@ -111,21 +112,29 @@ namespace Application.Services
             var entity = await GetSnmpDeviceById(id);
             _dbContext.Update(snmpDeviceModel);
             await _dbContext.SaveChangesAsync();
+            await _userLog.SetEventUserLog(new UserLogs
+            {
+                UserName = _tokenInfo.UserName ?? "MCSAdmin",
+                AppName = "Snmp Device Service",
+                Message = $"Updated SNMP device for : {snmpDeviceModel.DeviceName}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Updated
+            });
         }
 
         public async Task StartSnmpCommunication(Guid id)
         {
             var device = await GetSnmpDeviceById(id);
-            _mqtt.PublishMessage("SNMP/Start",$"{device}");
-            //await _userLog.SetEventUserLog(new UserLogs
-            //{
-            //    UserId = _tokenInfo.UserId,
-            //    UserName = _tokenInfo.UserName,
-            //    AppName = "Snmp Device Service",
-            //    Message= $"Started SNMP communication for : {device.DeviceName}",
-            //    LogDate = DateTime.UtcNow,
-            //    LogType = UserLogType.Updated
-            //});
+            var payload = JsonConvert.SerializeObject(device);
+            _mqtt.PublishMessage("DCS/SNMP/Start",payload);
+            await _userLog.SetEventUserLog(new UserLogs
+            {
+                UserName = _tokenInfo.UserName ?? "MCSAdmin",
+                AppName = "Snmp Device Service",
+                Message = $"Started SNMP communication for : {device.DeviceName}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Updated
+            });
         }
 
         public async Task StopSnmpCommunication(Guid id)
@@ -133,14 +142,26 @@ namespace Application.Services
             var device = await GetSnmpDeviceById(id);
             _mqtt.PublishMessage("SNMP/Stop",$"{ device}");
             await _userLog.SetEventUserLog(new UserLogs
-            //{
-            //    UserId = _tokenInfo.UserId,
-            //    UserName = _tokenInfo.UserName,
-            //    AppName = "Snmp Device Service",
-            //    Message = $"Stopped SNMP communication for {device.DeviceName}",
-            //    LogDate = DateTime.UtcNow,
-            //    LogType = UserLogType.Updated
-            //});
+            {
+                UserName = _tokenInfo.UserName ?? "MCSAdmin",
+                AppName = "Snmp Device Service",
+                Message = $"Stopped SNMP communication for {device.DeviceName}",
+                LogDate = DateTime.UtcNow,
+                LogType = UserLogType.Updated
+            });
+        }
+
+        public Task<SnmpCommandModel> SendSnmpCommand(SnmpCommandModel snmpCommandModel)
+        {
+            var payload = JsonConvert.SerializeObject(snmpCommandModel);
+            _mqtt.PublishMessage("DCS/SNMP/SendCommand", payload);
+            var commandModel = new SnmpCommandModel
+            {
+                SnmpDevice = snmpCommandModel.SnmpDevice,
+                Oid = snmpCommandModel.Oid,
+                Value = snmpCommandModel.Value
+            };
+            return Task.FromResult(commandModel);
         }
     }
 }

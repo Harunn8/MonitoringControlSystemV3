@@ -1,5 +1,6 @@
 ﻿using Application.Models;
 using Application.Responses;
+using DeviceApplication.Models;
 using McsCore.Entities;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,6 @@ namespace Application.Services.Base
         Task DeleteSnmpDevice(Guid id);
         Task StartSnmpCommunication(Guid id);
         Task StopSnmpCommunication(Guid id);
+        Task<SnmpCommandModel> SendSnmpCommand(SnmpCommandModel snmpCommandModel);
     }
 }

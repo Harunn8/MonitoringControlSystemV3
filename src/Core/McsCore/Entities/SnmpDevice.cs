@@ -10,7 +10,7 @@ namespace McsCore.Entities
 {
     public class SnmpDevice
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; set; }
         public string DeviceName { get; set; }
         public string IpAddress { get; set; }
         public int Port { get; set; }
@@ -25,7 +25,7 @@ namespace McsCore.Entities
     public class OidMapping
     {
         [Key]
-        public Guid ParameterId { get; set; } = new Guid();
+        public Guid ParameterId { get; set; }
         public string Oid { get; set; }
         public string ParameterName { get; set; }
     }

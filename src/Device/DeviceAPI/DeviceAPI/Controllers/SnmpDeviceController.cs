@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System;
 using Application.Models;
 using McsCore.Entities;
+using DeviceApplication.Models;
 
 namespace DeviceAPI.Controllers
 {
@@ -88,19 +89,19 @@ namespace DeviceAPI.Controllers
                 return BadRequest("Invalid SNMP Device data.");
             }
 
-            var result =  _snmpService.AddSnmpDevice(snmpDevice);
+            var result = _snmpService.AddSnmpDevice(snmpDevice);
             if (result == null)
             {
                 return BadRequest("Failed to add SNMP Device.");
             }
-            return CreatedAtAction(nameof(GetSnmpDeviceById), new { id = result.Id }, result);
+            return Ok(result);
         }
 
         [HttpPut("UpdateSnmpDevice")]
         public async Task<IActionResult> UpdateSnmpDevice(Guid id, [FromBody] SnmpDevice snmpDevice)
         {
             var device = await _snmpService.GetSnmpDeviceById(id);
-            if(device == null)
+            if (device == null)
             {
                 return NotFound("Device Not Found");
             }
@@ -130,6 +131,33 @@ namespace DeviceAPI.Controllers
             }
             await _snmpService.StartSnmpCommunication(id);
             return Ok("SNMP Communication started successfully.");
+        }
+
+        [HttpPost("StopSnmpCommunication/{id}")]
+        public async Task<ActionResult> StopSnmpCommunication(Guid id)
+        {
+            var device = await _snmpService.GetSnmpDeviceById(id);
+            if (device == null)
+            {
+                return NotFound("Device Not Found");
+            }
+            await _snmpService.StopSnmpCommunication(id);
+            return Ok("SNMP Communication stopped successfully.");
+        }
+
+        [HttpPost("SendSnmpCommand")]
+        public async Task<IActionResult> SendSnmpCommand([FromBody] SnmpCommandModel snmpCommandModel)
+        {
+            if (snmpCommandModel == null)
+            {
+                return BadRequest("Invalid SNMP Command data.");
+            }
+            var result = await _snmpService.SendSnmpCommand(snmpCommandModel);
+            if (result == null)
+            {
+                return BadRequest("Failed to send SNMP Command.");
+            }
+            return Ok(result);
         }
     }
 }

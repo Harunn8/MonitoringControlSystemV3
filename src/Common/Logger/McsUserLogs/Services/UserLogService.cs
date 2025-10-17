@@ -20,11 +20,12 @@ namespace McsUserLogs.Services
         private readonly McsAppDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public UserLogService(MongoDbContext context, McsAppDbContext dbContext, IMapper mapper)
+        public UserLogService(MongoDbContext context, McsAppDbContext dbContext, IMapper mapper, IMongoDatabase userLogsDatabase)
         {
             _userLogs = context.UserLogs;
             _dbContext = dbContext;
             _mapper = mapper;
+            _userLogs = userLogsDatabase.GetCollection<UserLogs>("UserLogs");
         }
 
         public async Task SetEventUserLog(UserLogs log)
