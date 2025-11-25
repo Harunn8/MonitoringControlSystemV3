@@ -20,21 +20,11 @@ namespace LoginAPI.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
         {
-            var isValidUser = await _login.ValidateUser(request.Username, request.Password);
+            var result = await _login.Login(request);
+            
+            if(result == null) return Unauthorized("Invalid username or password");
 
-            if (isValidUser)
-            {
-                var token = _login.GenerateJwtToken(request.Username);
-                return Ok(new { Token = token });
-            }
-
-            return Unauthorized("Invalid username or password");
+            return Ok(result);
         }
-    }
-
-    public class LoginRequest
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 }

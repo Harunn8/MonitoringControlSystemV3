@@ -29,6 +29,7 @@ namespace RuleAPI.Controllers
         public async Task<ActionResult> GetAllAlarm()
         {
             var result = await _alarmService.GetAllAlarm();
+            if (result == null) return NotFound();
             return Ok(result);
         }
 

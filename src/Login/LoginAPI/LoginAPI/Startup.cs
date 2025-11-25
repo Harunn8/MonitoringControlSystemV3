@@ -43,6 +43,17 @@ namespace LoginAPI
 
             services.AddAutoMapper(typeof(LoginMappingProfile));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "CorsDefaultPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -61,7 +72,8 @@ namespace LoginAPI
             }
 
             app.UseRouting();
-
+            app.UseCors("CorsDefaultPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

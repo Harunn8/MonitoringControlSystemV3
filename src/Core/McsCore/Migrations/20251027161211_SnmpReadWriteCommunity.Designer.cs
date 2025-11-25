@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027161211_SnmpReadWriteCommunity")]
+    partial class SnmpReadWriteCommunity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,26 +72,26 @@ namespace McsCore.Migrations
                     b.ToTable("Alarms");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.ParameterModel", b =>
+            modelBuilder.Entity("McsCore.Entities.OidMapping", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("ParameterId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Oid")
                         .HasColumnType("text");
 
-                    b.Property<string>("Oid")
+                    b.Property<string>("ParameterName")
                         .HasColumnType("text");
 
                     b.Property<Guid?>("SnmpDeviceId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("ParameterId");
 
                     b.HasIndex("SnmpDeviceId");
 
-                    b.ToTable("ParameterModel");
+                    b.ToTable("OidMapping");
                 });
 
             modelBuilder.Entity("McsCore.Entities.Scripts", b =>
@@ -126,9 +128,6 @@ namespace McsCore.Migrations
 
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
-
-                    b.Property<Guid>("PagId")
-                        .HasColumnType("uuid");
 
                     b.Property<int>("Port")
                         .HasColumnType("integer");
@@ -190,9 +189,6 @@ namespace McsCore.Migrations
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PagId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("Port")
                         .HasColumnType("integer");
 
@@ -224,10 +220,10 @@ namespace McsCore.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.ParameterModel", b =>
+            modelBuilder.Entity("McsCore.Entities.OidMapping", b =>
                 {
                     b.HasOne("McsCore.Entities.SnmpDevice", null)
-                        .WithMany("Parameters")
+                        .WithMany("OidList")
                         .HasForeignKey("SnmpDeviceId");
                 });
 
@@ -240,7 +236,7 @@ namespace McsCore.Migrations
 
             modelBuilder.Entity("McsCore.Entities.SnmpDevice", b =>
                 {
-                    b.Navigation("Parameters");
+                    b.Navigation("OidList");
                 });
 
             modelBuilder.Entity("McsCore.Entities.TcpDevice", b =>

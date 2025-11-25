@@ -13,6 +13,9 @@ using UserApplication.Services;
 using UserApplication.Services.Base;
 using Microsoft.Extensions.Configuration;
 using TokenInformation.Base;
+using LoginApplication.Responses;
+using McsCore.Entities;
+using LoginApplication.Models;
 
 namespace LoginApplication.Services
 {
@@ -35,7 +38,7 @@ namespace LoginApplication.Services
                 return false;
             }
 
-            if (user.UserName == userName && _userService.Decrypt(user.Password)== password)
+            if (user.UserName == userName && _userService.Decrypt(user.Password)== _userService.Decrypt(password))
             {
                 return true;
             }
@@ -59,6 +62,23 @@ namespace LoginApplication.Services
         public Task<bool> LogOutAsync(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<LoginResponses> Login(LoginRequest request)
+        {
+            var user = await _userService.GetUserByName(request.UserName);
+            
+            if (user == null) return null;
+
+            var validaUserResult = await ValidateUser(request.UserName, request.Password);
+
+            if (!validaUserResult) return null;
+
+            var token = GenerateJwtToken(request.UserName);
+
+            var loginResponse = new LoginResponses(user, token);
+
+            return loginResponse;
         }
     }
 }

@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102140119_NewSnmpDataDesign1")]
+    partial class NewSnmpDataDesign1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,9 +129,6 @@ namespace McsCore.Migrations
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PagId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("Port")
                         .HasColumnType("integer");
 
@@ -189,9 +188,6 @@ namespace McsCore.Migrations
 
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
-
-                    b.Property<Guid>("PagId")
-                        .HasColumnType("uuid");
 
                     b.Property<int>("Port")
                         .HasColumnType("integer");

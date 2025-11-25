@@ -6,6 +6,7 @@ using System;
 using Application.Models;
 using McsCore.Entities;
 using DeviceApplication.Models;
+using Application.Responses;
 
 namespace DeviceAPI.Controllers
 {
@@ -82,19 +83,15 @@ namespace DeviceAPI.Controllers
         }
 
         [HttpPost("AddSnmpDevice")]
-        public async Task<IActionResult> AddSnmpDevice([FromBody] SnmpDevice snmpDevice)
+        public async Task<SnmpDeviceResponses> AddSnmpDevice([FromBody] SnmpDevice snmpDevice)
         {
-            if (snmpDevice == null)
-            {
-                return BadRequest("Invalid SNMP Device data.");
-            }
-
-            var result = _snmpService.AddSnmpDevice(snmpDevice);
-            if (result == null)
-            {
-                return BadRequest("Failed to add SNMP Device.");
-            }
-            return Ok(result);
+            if (snmpDevice == null) return null;
+            
+            var result = await _snmpService.AddSnmpDevice(snmpDevice);
+            
+            if (result == null) return null;
+            
+            return result;
         }
 
         [HttpPut("UpdateSnmpDevice")]

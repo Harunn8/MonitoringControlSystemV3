@@ -18,6 +18,8 @@ namespace RuleApplication.Mapper
             CreateMap<Scripts, ScriptModel>().ReverseMap();
             CreateMap<Scripts, ScriptResponse>().ReverseMap();
             CreateMap<ScriptModel, ScriptResponse>().ReverseMap();
+
+            CreateMap<AlarmModel, AlarmResponse>().ReverseMap();
         }
     }
 }

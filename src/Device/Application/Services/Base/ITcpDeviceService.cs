@@ -18,7 +18,7 @@ namespace Application.Services.Base
         Task<TcpDeviceResponses> GetTcpDeviceByName(string name);
         Task<TcpDeviceResponses> GetTcpDeviceByPort(int port);
         Task<TcpDeviceResponses> GetTcpDeviceByIpAndPort(string ipAddress, int port);
-        Task AddTcpDevice(TcpDeviceModel tcpDeviceModel);
+        Task<TcpDeviceResponses> AddTcpDevice(TcpDeviceModel tcpDeviceModel);
         Task UpdateTcpDevice(Guid id, TcpDeviceModel tcpDeviceModel);
         Task StartTcpDeviceCommunication(Guid id);
         Task DeleteTcpDevice(Guid id);

@@ -11,7 +11,7 @@ namespace RuleApplication.Services.Base
 {
     public interface IAlarmService
     {
-        Task<List<AlarmResponse>> GetAllAlarm();
+        Task<List<Alarms>> GetAllAlarm();
         Task<AlarmResponse> GetAlarmById(Guid id);
         Task<List<AlarmResponse>> GetAlarmByDateRange(DateTime startDate, DateTime endDate);
         Task<List<AlarmResponse>> GetAlarmByStatus(Severity status);

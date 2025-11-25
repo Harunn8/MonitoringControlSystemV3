@@ -88,8 +88,11 @@ namespace DeviceAPI.Controllers
         [HttpPost("CreateTcpDevice")]
         public async Task<ActionResult> AddTcpDevice([FromBody] TcpDeviceModel request)
         {
-            await _tcpService.AddTcpDevice(request);
-            return Ok(request);
+            var response = await _tcpService.AddTcpDevice(request);
+
+            if (response == null) return BadRequest("Device can not added");
+
+            return Ok(response);
         }
 
         [HttpPut("UpdateTcpDevice/{id}")]

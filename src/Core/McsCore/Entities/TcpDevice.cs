@@ -9,6 +9,7 @@ namespace McsCore.Entities
 {
     public class TcpDevice
     {
+        public Guid PagId { get; set; }
         public Guid Id { get; set; } = new Guid();
         public string DeviceName { get; set; }
         public string IpAddress { get; set; }

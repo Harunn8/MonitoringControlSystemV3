@@ -32,6 +32,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using TokenInformation.Base;
 using TokenInformation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 
 namespace DeviceAPI
@@ -116,11 +118,21 @@ namespace DeviceAPI
             services.AddScoped<ISnmpDeviceService, SnmpDeviceService>();
             services.AddScoped<ITcpDeviceService, TcpDeviceService>();
             services.AddScoped<IUserLogService, UserLogService>();
-            services.AddHttpContextAccessor();
+            services.TryAddTransient<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ITokenInformationService, TokenInformationService>();
 
+            Log.Information("Device API started");
+            #endregion
 
-
+            #region CORS
+            services.AddCors(opts =>
+            {
+                opts.AddPolicy(name : "DefaultCorsPolicy",
+                    builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
             #endregion
 
             services.AddControllers();
@@ -141,7 +153,8 @@ namespace DeviceAPI
             }
 
             app.UseRouting();
-
+            app.UseCors("DefaultCorsPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

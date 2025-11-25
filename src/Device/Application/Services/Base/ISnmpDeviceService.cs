@@ -18,7 +18,7 @@ namespace Application.Services.Base
         Task<SnmpDeviceResponses> GetSnmpDeviceByName(string name);
         Task<SnmpDeviceResponses> GetSnmpDeviceByPort(int port);
         Task<SnmpDeviceResponses> GetSnmpDeviceByIpAndPort(string ipAddress, int port);
-        Task AddSnmpDevice(SnmpDevice snmpDeviceModel);
+        Task<SnmpDeviceResponses> AddSnmpDevice(SnmpDevice snmpDeviceModel);
         Task UpdateSnmpDevice(Guid id, SnmpDevice snmpDeviceModel);
         Task DeleteSnmpDevice(Guid id);
         Task StartSnmpCommunication(Guid id);
