@@ -21,11 +21,14 @@ using MongoDB.Driver;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
+using RuleApplication.Helper;
+using RuleApplication.HttpHelper;
 using RuleApplication.Mapper;
 using RuleApplication.Services;
 using RuleApplication.Services.Base;
 using RuleApplication.Validations;
 using Serilog;
+using TokenInformation.Base;
 
 namespace RuleAPI
 {
@@ -102,11 +105,19 @@ namespace RuleAPI
             Log.Information("MongoDB connection was established");
             #endregion
 
+            #region APIs
+            HttpHelperService._loginUri = ConfigurationHelper.GetLoginUri();
+            #endregion
+
             #region Services
             services.AddAutoMapper(typeof(RuleMappingProfile));
             services.AddScoped<IAlarmService, AlarmService>();
             services.AddScoped<IPolicyScriptService, PolicyScriptService>();
             services.AddScoped<IUserLogService, UserLogService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ITokenInformationService, TokenInformationService>();
+            services.AddScoped<HttpHelperService>();
+            services.AddScoped<ConfigurationHelper>();
 
             services.AddTransient<PolicyScriptValidator>();
             services.AddTransient<AlarmValidator>();

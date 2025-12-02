@@ -23,11 +23,13 @@ namespace LoginApplication.Services
     {
         private readonly IUserService _userService;
         private readonly string _jwtKey;
+        private readonly ITokenInformationService _tokenInformationService;
 
-        public LoginService(IUserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration)
+        public LoginService(IUserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration, ITokenInformationService tokenInformationService)
         {
             _userService = userService;
             _jwtKey = configuration["jwt:Key"];
+            _tokenInformationService = tokenInformationService;
         }
 
         public async Task<bool> ValidateUser(string userName, string password)
@@ -47,16 +49,26 @@ namespace LoginApplication.Services
 
         public string GenerateJwtToken(string userName)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new[]
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName) }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Role,"admin"),
+                new Claim(JwtRegisteredClaimNames.Email,$"{userName}@deneme.com")
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+ 
+
+           var securityToken = new JwtSecurityToken
+                (
+                    issuer: "McsGen3.com",
+                    audience: "McsGen3.com",
+                    expires: DateTime.Now.AddMinutes(10),
+                    claims : claims,
+                    notBefore: DateTime.Now,
+                    signingCredentials : new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),SecurityAlgorithms.HmacSha256)
+                );
+
+            var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return token;
         }
 
         public Task<bool> LogOutAsync(Guid id)
@@ -77,6 +89,8 @@ namespace LoginApplication.Services
             var token = GenerateJwtToken(request.UserName);
 
             var loginResponse = new LoginResponses(user, token);
+
+            var userName = _tokenInformationService.GetUserName;
 
             return loginResponse;
         }

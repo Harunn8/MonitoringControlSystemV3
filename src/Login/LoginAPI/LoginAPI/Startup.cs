@@ -15,7 +15,10 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using TokenInformation.Base;
 using UserApplication.Mapper;
 using UserApplication.Services;
 using UserApplication.Services.Base;
@@ -36,6 +39,32 @@ namespace LoginAPI
         {
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ITokenInformationService, TokenInformationService>();
+
+            #region Token
+
+            var key = Encoding.UTF8.GetBytes("authenticationKey.111");
+
+            services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                 options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                     ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true
+                };
+            });
+
+            services.AddAuthorization();
+            #endregion
+
+
 
             Console.WriteLine("LOGIN API STARTED");
             services.AddDbContext<McsAppDbContext>(options => options.UseNpgsql(
@@ -58,6 +87,30 @@ namespace LoginAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LoginAPI", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Enter : Bearer {your token}",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
         }
 

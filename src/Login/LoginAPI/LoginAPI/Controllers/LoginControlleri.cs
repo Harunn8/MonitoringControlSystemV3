@@ -1,6 +1,7 @@
 ﻿using LoginApplication.Models;
 using LoginApplication.Services;
 using LoginApplication.Services.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,6 +18,7 @@ namespace LoginAPI.Controllers
             _login = login;
         }
 
+        [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
         {

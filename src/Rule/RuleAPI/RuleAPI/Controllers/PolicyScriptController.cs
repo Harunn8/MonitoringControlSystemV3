@@ -59,7 +59,7 @@ namespace RuleAPI.Controllers
                 try
                 {
                     await _policyScriptService.CreateScript(model);
-                    return Ok("Alarm added successfully");
+                    return Ok("Script added successfully");
                 }
                 catch (Exception ex)
                 {

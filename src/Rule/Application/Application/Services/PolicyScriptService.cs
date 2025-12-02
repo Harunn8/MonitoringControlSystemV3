@@ -4,6 +4,8 @@ using McsMqtt.Producer;
 using McsUserLogs.Services.Base;
 using Microsoft.EntityFrameworkCore;
 using Redis.Services;
+using RuleApplication.Helper;
+using RuleApplication.HttpHelper;
 using RuleApplication.Models;
 using RuleApplication.Responses;
 using RuleApplication.Services.Base;
@@ -12,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TokenInformation.Base;
 
 namespace RuleApplication.Services
 {
@@ -21,28 +24,38 @@ namespace RuleApplication.Services
         private readonly McsAppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IUserLogService _userLog;
-
-        public PolicyScriptService(MqttProducer mqtt, McsAppDbContext dbContext, IMapper mapper, IUserLogService userLog)
+        private readonly ITokenInformationService _tokenInformation;
+        private string _token = HttpHelperService.GetToken(HttpHelperService._loginUri).Result;
+        public PolicyScriptService(MqttProducer mqtt, McsAppDbContext dbContext, IMapper mapper, IUserLogService userLog, ITokenInformationService tokenInformation)
         {
             _mqtt = mqtt;
             _dbContext = dbContext;
             _mapper = mapper;
             _userLog = userLog;
+            _tokenInformation = tokenInformation;
         }
 
         public async Task CreateScript(ScriptModel script)
         {
-            await _dbContext.Scripts.AddAsync(script);
-            await _dbContext.SaveChangesAsync();
-            await _userLog.SetEventUserLog(new McsCore.Entities.UserLogs
+            try
             {
-                Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
-                AppName = "RE/PolicyScriptService/AddPolicyScript",
-                Message = $"Create new script: {script.ScriptName}",
-                LogDate = DateTime.UtcNow,
-                LogType = McsCore.Entities.UserLogType.Added
-            });
+                await _dbContext.Scripts.AddAsync(script);
+                await _dbContext.SaveChangesAsync();
+                await _userLog.SetEventUserLog(new McsCore.Entities.UserLogs
+                {
+                    Id = Guid.NewGuid(),
+                    UserName = _tokenInformation.GetUserNameFromToken(_token),
+                    AppName = "RE/PolicyScriptService/AddPolicyScript",
+                    Message = $"Create new script: {script.ScriptName}",
+                    LogDate = DateTime.UtcNow,
+                    LogType = McsCore.Entities.UserLogType.Added
+                });
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
 
         public async Task DeleteScript(Guid id)
