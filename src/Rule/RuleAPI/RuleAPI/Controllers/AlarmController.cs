@@ -40,12 +40,12 @@ namespace RuleAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetAlarmByDateRange")]
-        public async Task<ActionResult> GetAlarmByDateRange(DateTime startDate, DateTime endDate)
-        {
-            var result = await _alarmService.GetAlarmByDateRange(startDate, endDate);
-            return Ok(result);
-        }
+        //[HttpGet("GetAlarmByDateRange")]
+        //public async Task<ActionResult> GetAlarmByDateRange(DateTime startDate, DateTime endDate)
+        //{
+        //    var result = await _alarmService.GetAlarmByDateRange(startDate, endDate);
+        //    return Ok(result);
+        //}
 
         [HttpGet("GetAlarmByStatus/{status}")]
         public async Task<ActionResult> GetAlarmByStatus(int status)

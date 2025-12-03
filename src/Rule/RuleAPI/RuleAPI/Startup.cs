@@ -1,6 +1,8 @@
 using McsCore.AppDbContext;
 using McsCore.AppDbContext.Mongo;
 using McsCore.Mongo;
+using McsCore.Repositories;
+using McsCore.Repositories.Base;
 using McsMqtt.Connection;
 using McsMqtt.Connection.Base;
 using McsMqtt.Producer;
@@ -118,6 +120,7 @@ namespace RuleAPI
             services.AddScoped<ITokenInformationService, TokenInformationService>();
             services.AddScoped<HttpHelperService>();
             services.AddScoped<ConfigurationHelper>();
+            services.AddScoped<IAlarmRepository, AlarmRepository>();
 
             services.AddTransient<PolicyScriptValidator>();
             services.AddTransient<AlarmValidator>();

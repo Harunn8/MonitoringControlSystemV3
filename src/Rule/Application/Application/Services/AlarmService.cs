@@ -14,19 +14,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Serilog;
+using McsCore.Repositories;
+using System.Reflection.Metadata.Ecma335;
+using McsCore.Repositories.Base;
 
 namespace RuleApplication.Services
 {
     public class AlarmService : IAlarmService
     {
-        private readonly McsAppDbContext _dbContext;
+        private readonly IAlarmRepository _alarmRepository;
         private readonly IMapper _mapper;
         private readonly AlarmValidator _validator;
         private readonly MqttProducer _mqtt;
 
-        public AlarmService(McsAppDbContext dbContext, AlarmValidator validator)
+        public AlarmService(IAlarmRepository alarmRepository, AlarmValidator validator)
         {
-            _dbContext = dbContext;
+            _alarmRepository = alarmRepository;
             _validator = validator;
         }
 
@@ -34,8 +37,7 @@ namespace RuleApplication.Services
         {
             try
             {
-                await _dbContext.Alarms.AddAsync(alarm);
-                await _dbContext.SaveChangesAsync();
+               await _alarmRepository.AddAlarm(alarm);
             }
             catch (Exception ex)
             {
@@ -45,68 +47,49 @@ namespace RuleApplication.Services
 
         public async Task DeleteAlarm(Guid id)
         {
-            var entity = _dbContext.Alarms.FirstOrDefaultAsync(x => x.Id == id);
-            if (entity != null)
-            {
-                var payload = Newtonsoft.Json.JsonConvert.SerializeObject(entity);
-                _mqtt.PublishMessage("RE/DeleteAlarm", $"{payload}");
-                _dbContext.Alarms.Remove(entity.Result);
-                await _dbContext.SaveChangesAsync();
-            }
+           await _alarmRepository.DeleteAlarm(id);
         }
 
-        public async Task<List<AlarmResponse>> GetAlarmByDateRange(DateTime startDate, DateTime endDate)
+        //public async Task<List<AlarmResponse>> GetAlarmByDateRange(DateTime startDate, DateTime endDate)
+        //{
+        //    var entites = await _dbContext.Alarms.Where(x => x.CreateDate >= startDate && x.CreateDate <= endDate).ToListAsync();
+        //    var response = _mapper.Map<List<AlarmResponse>>(entites);
+        //    return response;
+        //}
+
+        public async Task<List<Alarms>> GetAlarmByDeviceId(Guid deviceId)
         {
-            var entites = await _dbContext.Alarms.Where(x => x.CreateDate >= startDate && x.CreateDate <= endDate).ToListAsync();
-            var response = _mapper.Map<List<AlarmResponse>>(entites);
-            return response;
+            var result = await _alarmRepository.GetAlarmByDeviceId(deviceId);
+            return result;
         }
 
-        public async Task<List<AlarmResponse>> GetAlarmByDeviceId(Guid deviceId)
+        public async Task<List<Alarms>> GetAlarmById(Guid id)
         {
-            var entites = await _dbContext.Alarms.Where(x => x.DeviceId == deviceId).ToListAsync();
-            var response = _mapper.Map<List<AlarmResponse>>(entites);
-            return response;
+            var result = await _alarmRepository.GetAlarmById(id);
+            return result;
         }
 
-        public async Task<AlarmResponse> GetAlarmById(Guid id)
+        public async Task<List<Alarms>> GetAlarmByParameterId(Guid parameterId)
         {
-            var entity = await _dbContext.Alarms.FirstOrDefaultAsync(x => x.Id == id);
-            var response = _mapper.Map<AlarmResponse>(entity);
-            return response;
+            var result = await _alarmRepository.GetAlarmByParameterId(parameterId);
+            return result;
         }
 
-        public async Task<List<AlarmResponse>> GetAlarmByParameterId(Guid parameterId)
+        public async Task<List<Alarms>> GetAlarmByStatus(Severity status)
         {
-            var entites = await _dbContext.Alarms.Where(x => x.ParameterId == parameterId).ToListAsync();
-            var response = _mapper.Map<List<AlarmResponse>>(entites);
-            return response;
-        }
-
-        public async Task<List<AlarmResponse>> GetAlarmByStatus(Severity status)
-        {
-            var entites = await _dbContext.Alarms.Where(x => x.Severity == status).ToListAsync();
-            var response = _mapper.Map<List<AlarmResponse>>(entites);
-            return response;
+            var result = await _alarmRepository.GetAlarmByStatus(status);
+            return result;
         }
 
         public async Task<List<Alarms>> GetAllAlarm()
         {
-            var entites = await _dbContext.Alarms.ToListAsync();
-
-            if (entites.Count() == 0) return null;
-
-            return entites;
+            var result = await _alarmRepository.GetAllAlarm();
+            return result;
         }
 
         public async Task UpdateAlarm(Guid id, AlarmModel alarm)
         {
-            var existingAlarm = await GetAlarmById(id);
-            if (alarm != null)
-            {
-                _dbContext.Alarms.Update(alarm);
-                await _dbContext.SaveChangesAsync();
-            }
+            var result = await _alarmRepository.UpdateAlarm(id,alarm);
         }
     }
 }
