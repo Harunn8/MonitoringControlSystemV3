@@ -49,11 +49,11 @@ namespace LoginAPI
             services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
-                 options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                     ValidateIssuer = false,
+                    ValidateIssuer = false,
                     ValidateAudience = false,
                     IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
                     ValidateIssuerSigningKey = true,
@@ -67,8 +67,16 @@ namespace LoginAPI
 
 
             Console.WriteLine("LOGIN API STARTED");
-            services.AddDbContext<McsAppDbContext>(options => options.UseNpgsql(
-            Configuration.GetConnectionString("Postgres")));
+            try
+            {
+                services.AddDbContext<McsAppDbContext>(options => options.UseNpgsql(
+                Configuration.GetConnectionString("Postgres")));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
 
             services.AddAutoMapper(typeof(LoginMappingProfile));
 

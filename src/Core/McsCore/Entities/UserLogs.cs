@@ -10,23 +10,12 @@ namespace McsCore.Entities
 {
     public class UserLogs
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; }
-
-        [BsonRepresentation(BsonType.String)]
         public Guid UserId { get; set; }
-
-        [BsonElement("UserName")]
         public string UserName { get; set; }
-
-        [BsonElement("AppName")]
         public string AppName { get; set; }
-        [BsonElement("Message")]
         public string Message { get; set; }
-        [BsonElement("LogDate")]
         public DateTime LogDate { get; set; }
-        [BsonElement("LogType")]
         public UserLogType LogType { get; set; }
     }
 
