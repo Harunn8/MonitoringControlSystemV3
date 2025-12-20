@@ -18,5 +18,6 @@ namespace McsCore.Entities
         public string ParameterValue { get; set; }
         public DateTime ParameterTimeStamp { get; set; }
         public string ParameterDescription { get; set; }
+        public bool IsActive { get; set; }
     }
 }

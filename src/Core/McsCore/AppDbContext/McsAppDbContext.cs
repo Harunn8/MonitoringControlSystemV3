@@ -17,5 +17,6 @@ namespace McsCore.AppDbContext
         public DbSet<Users> Users { get; set; }
         public DbSet<Scripts> Scripts { get; set; }
         public DbSet<Alarms> Alarms { get; set; }
+        public DbSet<ParameterLogsAdd> ParameterLogs { get; set; }
     }
 }

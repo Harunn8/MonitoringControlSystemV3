@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MonitorApplication.Responses
 {
-    public class ParameterLogsResponse : ParameterLogsModel
+    public class ParameterLogsResponse : ParameterLogAddModel
     {
     }
 }

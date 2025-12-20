@@ -14,5 +14,8 @@ namespace MonitorApplication.Services.Base
         Task<TableResponse> GetParameterLogsOfLastHourByPage(TableModel tableModel);
         Task<TableResponse> GetParameterLogsOfLastDayByPage(TableModel tableModel);
         Task<TableResponse> GetParameterLogsOfLastWeekByPage(TableModel tableModel);
+        public void AddParameterLogs(ParameterLogsAdd addModel);
+        public bool StartOrStopParameterLogs(Guid parameterSetsId, bool isActive);
+        public bool UpdateParameterLog(Guid parameterSetsId, ParameterLogsAdd updatedParameterLogsModel);
     }
 }

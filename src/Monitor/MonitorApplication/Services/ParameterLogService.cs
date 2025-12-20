@@ -6,8 +6,6 @@ using MonitorApplication.Responses;
 using MonitorApplication.Services.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MonitorApplication.Services
@@ -58,6 +56,21 @@ namespace MonitorApplication.Services
         }
 
         public Task<TableResponse> GetParameterLogsOfLastWeekByPage(TableModel tableModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddParameterLogs(ParameterLogsAdd addModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool StartOrStopParameterLogs(Guid parameterSetsId, bool isActive)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateParameterLog(Guid parameterSetsId, ParameterLogsAdd updatedParameterLogsModel)
         {
             throw new NotImplementedException();
         }
