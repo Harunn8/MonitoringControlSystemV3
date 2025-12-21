@@ -223,6 +223,18 @@ namespace MonitorApplication.Repository
 
                     response = UpdateParameterLog(parameterSetsId, updateParameterSets);
                 }
+
+                var userLog = new UserLogs
+                {
+                    Id = Guid.NewGuid(),
+                    UserName = "McsAdmin",
+                    AppName = "MonitorAPI",
+                    Message = $"Parameter logs updated",
+                    LogDate = DateTime.Now,
+                    LogType = UserLogType.Updated
+                };
+
+                await _userLogService.SetEventUserLog(userLog);
             }
 
             return response;

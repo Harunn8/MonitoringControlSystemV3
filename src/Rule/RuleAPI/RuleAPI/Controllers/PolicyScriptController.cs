@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RuleApplication.Models;
 using RuleApplication.Services.Base;
@@ -10,6 +11,7 @@ namespace RuleAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PolicyScriptController : ControllerBase
     {
         private readonly IPolicyScriptService _policyScriptService;
