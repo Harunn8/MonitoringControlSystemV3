@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using McsCore.AppDbContext;
+using McsCore.AppDbContext.Mongo;
 using McsCore.Entities;
 using McsCore.Responses;
 using McsUserLogs.Services.Base;
@@ -20,12 +21,12 @@ namespace MonitorApplication.Repository
 {
     public class ParameterLogRepository : IParameterLogRepository
     {
-        private readonly IParameterLogContext _context;
+        private readonly MongoDbContext _context;
         private readonly McsAppDbContext _postgreContext;
         private readonly IMapper _mapper;
         private readonly IUserLogService _userLogService;
 
-        public ParameterLogRepository(IParameterLogContext context, McsAppDbContext postgreContext, IMapper mapper, IUserLogService userLogService)
+        public ParameterLogRepository(MongoDbContext context, McsAppDbContext postgreContext, IMapper mapper, IUserLogService userLogService)
         {
             _context = context;
             _postgreContext = postgreContext;
@@ -164,11 +165,11 @@ namespace MonitorApplication.Repository
             throw new NotImplementedException();
         }
 
-        public async void AddParameterLogs(ParameterLogAddModel addModel)
+        public async Task<bool> AddParameterLogs(ParameterLogsAdd addModel)
         {
             try
             {
-                await _postgreContext.AddAsync(addModel);
+                await _postgreContext.ParameterLogs.AddAsync(addModel);
                 await _postgreContext.SaveChangesAsync();
 
                 var userLog = new UserLogs
@@ -182,60 +183,41 @@ namespace MonitorApplication.Repository
                 };
 
                 await _userLogService.SetEventUserLog(userLog);
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error : Could not add parameter logs", ex.Message);
+                return false;
             }
         }
 
         public async Task<bool> StartOrStopParameterLogs(Guid parameterSetsId, bool isActive)
         {
-            // TODO : Bu fonksiyon daha kısa ve kullanışlı yazılabilir. Şimdilik bu şekilde stabil ve çalışır olduğunu gördükten sonra refactor edeceğim.
             var response = false;
+
             var parameterSets = await GetParameterLogsByParameterSetsId(parameterSetsId);
 
             if (parameterSets != null)
             {
-                if (isActive && parameterSets.isActive == false)
-                {
-                    var updateParameterSets = new ParameterLogsAdd
-                    {
-                        Id = parameterSets.Id,
-                        ParameterSetsName = parameterSets.ParameterSetsName,
-                        ParameterId = parameterSets.ParameterId,
-                        DeviceId = parameterSets.DeviceId,
-                        isActive = isActive
-                    };
+                parameterSets.isActive = isActive;
 
-                    response = UpdateParameterLog(parameterSetsId, updateParameterSets);
-                }
-                else if (!isActive && parameterSets.isActive == true)
-                {
-                    var updateParameterSets = new ParameterLogsAdd
-                    {
-                        Id = parameterSets.Id,
-                        ParameterSetsName = parameterSets.ParameterSetsName,
-                        ParameterId = parameterSets.ParameterId,
-                        DeviceId = parameterSets.DeviceId,
-                        isActive = isActive
-                    };
 
-                    response = UpdateParameterLog(parameterSetsId, updateParameterSets);
-                }
-
-                var userLog = new UserLogs
-                {
-                    Id = Guid.NewGuid(),
-                    UserName = "McsAdmin",
-                    AppName = "MonitorAPI",
-                    Message = $"Parameter logs updated",
-                    LogDate = DateTime.Now,
-                    LogType = UserLogType.Updated
-                };
-
-                await _userLogService.SetEventUserLog(userLog);
+                response = UpdateParameterLog(parameterSetsId, parameterSets);
             }
+            else return false;
+
+            var userLog = new UserLogs
+            {
+                Id = Guid.NewGuid(),
+                UserName = "McsAdmin",
+                AppName = "MonitorAPI",
+                Message = $"Parameter logs updated",
+                LogDate = DateTime.Now,
+                LogType = UserLogType.Updated
+            };
+
+            await _userLogService.SetEventUserLog(userLog);
 
             return response;
         }

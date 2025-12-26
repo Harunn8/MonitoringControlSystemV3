@@ -82,6 +82,20 @@ namespace Application.Services
 
         public async Task<SnmpDeviceResponses> AddSnmpDevice(SnmpDevice snmpDeviceModel)
         {
+            var snmpDeviceData = new SnmpDevice
+            {
+                Id = Guid.NewGuid(),
+                DeviceName = snmpDeviceModel.DeviceName,
+                IpAddress = snmpDeviceModel.IpAddress,
+                Port = snmpDeviceModel.Port,
+                SnmpVersion = snmpDeviceModel.SnmpVersion,
+                Timeout = snmpDeviceModel.Timeout,
+                Retry = snmpDeviceModel.Retry,
+                Version = snmpDeviceModel.Version,
+                ReadCommunity = snmpDeviceModel.ReadCommunity,
+                WriteCommunity = snmpDeviceModel.WriteCommunity
+            };
+
             try
             {
                 await _dbContext.AddAsync(snmpDeviceModel);

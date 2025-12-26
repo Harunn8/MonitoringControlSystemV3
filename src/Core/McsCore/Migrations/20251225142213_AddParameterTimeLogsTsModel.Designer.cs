@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251225142213_AddParameterTimeLogsTsModel")]
+    partial class AddParameterTimeLogsTsModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,9 +80,6 @@ namespace McsCore.Migrations
 
                     b.Property<List<Guid>>("DeviceId")
                         .HasColumnType("uuid[]");
-
-                    b.Property<int>("Interval")
-                        .HasColumnType("integer");
 
                     b.Property<List<Guid>>("ParameterId")
                         .HasColumnType("uuid[]");

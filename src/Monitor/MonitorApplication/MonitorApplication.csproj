@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="MongoDB.Driver" Version="3.4.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
     <PackageReference Include="Newtonsoft.Json" Version="7.0.1" />
   </ItemGroup>
 
@@ -15,7 +15,6 @@
     <ProjectReference Include="..\..\Core\McsCore\McsCore.csproj" />
     <ProjectReference Include="..\..\McsMqtt\McsMqtt\McsMqtt.csproj" />
     <ProjectReference Include="..\..\McsRedis\Redis\Redis.csproj" />
-    <ProjectReference Include="..\..\User\UserAPI\UserAPI\UserAPI.csproj" />
   </ItemGroup>
 
 </Project>

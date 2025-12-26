@@ -17,8 +17,8 @@ namespace MonitorApplication.Repository.Base
         Task<List<ParameterLogs>> GetParameterLogsOfLastDayByPage(TableModel tableModel);
         Task<List<ParameterLogs>> GetParameterLogsOfLastWeekByPage(TableModel tableModel);
         Task<List<ParameterLogs>> GetParameterLogsOfLastMonthByPage(TableModel tableModel);
-        public void AddParameterLogs(ParameterLogAddModel addModel);
-        Task<bool> StartOrStopParameterLogs(Guid parameterSetsId, bool isActive);
+        public Task<bool> AddParameterLogs(ParameterLogsAdd addModel);
+        public Task<bool> StartOrStopParameterLogs(Guid parameterSetsId, bool isActive);
         public bool UpdateParameterLog(Guid parameterSetsId, ParameterLogsAdd updatedParameterLogsModel);
     }
 }

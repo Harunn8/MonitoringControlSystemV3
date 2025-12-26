@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251224145519_newSnmpDeviceModel")]
+    partial class newSnmpDeviceModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,32 +70,6 @@ namespace McsCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Alarms");
-                });
-
-            modelBuilder.Entity("McsCore.Entities.ParameterLogTs", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<List<Guid>>("DeviceId")
-                        .HasColumnType("uuid[]");
-
-                    b.Property<int>("Interval")
-                        .HasColumnType("integer");
-
-                    b.Property<List<Guid>>("ParameterId")
-                        .HasColumnType("uuid[]");
-
-                    b.Property<string>("ParameterSetsName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ParameterLogsTs");
                 });
 
             modelBuilder.Entity("McsCore.Entities.ParameterLogsAdd", b =>
@@ -175,6 +151,9 @@ namespace McsCore.Migrations
 
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
+
+                    b.Property<Guid>("PagId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Port")
                         .HasColumnType("integer");
