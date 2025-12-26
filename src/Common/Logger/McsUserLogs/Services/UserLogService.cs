@@ -31,6 +31,7 @@ namespace McsUserLogs.Services
         public async Task SetEventUserLog(UserLogs log)
         {
             // Güncel kullanıcının bilgisini alınarak userModel içerisine yazdırılmalı
+            // TODO : TokenInformation düzeltilerek güncel kullanıcı adı alınmalı
 
             try
             {

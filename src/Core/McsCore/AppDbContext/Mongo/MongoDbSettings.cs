@@ -14,10 +14,11 @@ namespace McsCore.Mongo
 
     public class Collections
     {
-      public string Alarms { get; set; }
-      public string ActiveAlarms { get; set; }
-      public string HistoricalAlarms { get; set; }
-      public string SystemLogs { get; set; }
-      public string UserLogs { get; set; }
+        public string Alarms { get; set; }
+        public string ActiveAlarms { get; set; }
+        public string HistoricalAlarms { get; set; }
+        public string SystemLogs { get; set; }
+        public string UserLogs { get; set; }
+        public string ParameterLogs { get; set; }
     }
 }

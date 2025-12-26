@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using McsCore.Entities;
 using McsCore.Responses;
+using MonitorApplication.Models;
 using MonitorApplication.Repository.Base;
 using MonitorApplication.Responses;
 using MonitorApplication.Services.Base;
@@ -60,14 +61,24 @@ namespace MonitorApplication.Services
             throw new NotImplementedException();
         }
 
-        public void AddParameterLogs(ParameterLogsAdd addModel)
+        public async Task<bool> AddParameterLogs(ParameterLogsAdd addModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _repository.AddParameterLogs(addModel);
+                return response;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error  : Could not add parameter sets ",ex.Message);
+                return false;
+            }
         }
 
-        public bool StartOrStopParameterLogs(Guid parameterSetsId, bool isActive)
+        public async Task<bool> StartOrStopParameterLogs(Guid parameterSetsId, bool isActive)
         {
-            throw new NotImplementedException();
+            var response = await _repository.StartOrStopParameterLogs(parameterSetsId, isActive);
+            return response;
         }
 
         public bool UpdateParameterLog(Guid parameterSetsId, ParameterLogsAdd updatedParameterLogsModel)

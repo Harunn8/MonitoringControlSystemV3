@@ -18,5 +18,6 @@ namespace McsCore.AppDbContext
         public DbSet<Scripts> Scripts { get; set; }
         public DbSet<Alarms> Alarms { get; set; }
         public DbSet<ParameterLogsAdd> ParameterLogs { get; set; }
+        public DbSet<ParameterLogTs> ParameterLogsTs { get; set; }
     }
 }

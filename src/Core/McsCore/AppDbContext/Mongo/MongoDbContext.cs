@@ -23,5 +23,6 @@ namespace McsCore.AppDbContext.Mongo
         public IMongoCollection<UserLogs> UserLogs => _database.GetCollection<UserLogs>("UserLogs");
         public IMongoCollection<ActiveAlarms> ActiveAlarms => _database.GetCollection<ActiveAlarms>("ActiveAlarms");
         public IMongoCollection<HistoricalAlarms> HistoricalAlarms => _database.GetCollection<HistoricalAlarms>("HistoricalAlarms");
+        public IMongoCollection<ParameterLogs> ParameterLogs => _database.GetCollection<ParameterLogs>("ParameterLogs");
     }
 }

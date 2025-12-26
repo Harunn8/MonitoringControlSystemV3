@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251224150017_noBaseCommunicationModelDevices")]
+    partial class noBaseCommunicationModelDevices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,32 +72,6 @@ namespace McsCore.Migrations
                     b.ToTable("Alarms");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.ParameterLogTs", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<List<Guid>>("DeviceId")
-                        .HasColumnType("uuid[]");
-
-                    b.Property<int>("Interval")
-                        .HasColumnType("integer");
-
-                    b.Property<List<Guid>>("ParameterId")
-                        .HasColumnType("uuid[]");
-
-                    b.Property<string>("ParameterSetsName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ParameterLogsTs");
-                });
-
             modelBuilder.Entity("McsCore.Entities.ParameterLogsAdd", b =>
                 {
                     b.Property<Guid>("Id")
@@ -131,12 +107,7 @@ namespace McsCore.Migrations
                     b.Property<string>("Oid")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("SnmpDeviceId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SnmpDeviceId");
 
                     b.ToTable("ParameterModel");
                 });
@@ -176,6 +147,9 @@ namespace McsCore.Migrations
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ParametersId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Port")
                         .HasColumnType("integer");
 
@@ -198,6 +172,8 @@ namespace McsCore.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParametersId");
 
                     b.ToTable("SnmpDevices");
                 });
@@ -270,11 +246,13 @@ namespace McsCore.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.ParameterModel", b =>
+            modelBuilder.Entity("McsCore.Entities.SnmpDevice", b =>
                 {
-                    b.HasOne("McsCore.Entities.SnmpDevice", null)
-                        .WithMany("Parameters")
-                        .HasForeignKey("SnmpDeviceId");
+                    b.HasOne("McsCore.Entities.ParameterModel", "Parameters")
+                        .WithMany()
+                        .HasForeignKey("ParametersId");
+
+                    b.Navigation("Parameters");
                 });
 
             modelBuilder.Entity("McsCore.Entities.TcpData", b =>
@@ -282,11 +260,6 @@ namespace McsCore.Migrations
                     b.HasOne("McsCore.Entities.TcpDevice", null)
                         .WithMany("TcpData")
                         .HasForeignKey("TcpDeviceId");
-                });
-
-            modelBuilder.Entity("McsCore.Entities.SnmpDevice", b =>
-                {
-                    b.Navigation("Parameters");
                 });
 
             modelBuilder.Entity("McsCore.Entities.TcpDevice", b =>

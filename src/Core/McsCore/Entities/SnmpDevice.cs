@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace McsCore.Entities
 {
-    public class SnmpDevice : BaseCommunicationModel
+    public class SnmpDevice
     {
         public Guid Id { get; set; }
         public string DeviceName { get; set; }
@@ -15,6 +15,7 @@ namespace McsCore.Entities
         public string Version { get; set; }
         public string ReadCommunity { get; set; }
         public string WriteCommunity { get; set; }
+        public List<ParameterModel> Parameters { get; set; }
 
     }
 

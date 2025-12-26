@@ -16,7 +16,7 @@ namespace McsCore.AppDbContext
     {
         public McsAppDbContext CreateDbContext(string[] args)
         {
-            var basePath =  @"C:\Users\harun\source\repos\MonitoringControlSystemV3\src\Device\DeviceAPI\DeviceAPI";
+            var basePath =  @"C:\Users\harun.kirtay\source\repos\MonitoringControlSystemV3\src\Device\DeviceAPI\DeviceAPI";
 
 
             var configuration = new ConfigurationBuilder()
