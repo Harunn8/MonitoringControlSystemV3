@@ -6,8 +6,6 @@ using McsCore.Responses;
 using McsUserLogs.Services.Base;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
-using MonitorApplication.Data.Interfaces;
-using MonitorApplication.Models;
 using MonitorApplication.Repository.Base;
 using MonitorApplication.Responses;
 using Newtonsoft.Json;
@@ -16,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using McsMqtt.Producer;
 
 namespace MonitorApplication.Repository
 {
@@ -25,16 +24,20 @@ namespace MonitorApplication.Repository
         private readonly McsAppDbContext _postgreContext;
         private readonly IMapper _mapper;
         private readonly IUserLogService _userLogService;
+        private readonly MqttProducer _mqttPublisher;
 
-        public ParameterLogRepository(MongoDbContext context, McsAppDbContext postgreContext, IMapper mapper, IUserLogService userLogService)
+        public ParameterLogRepository(MongoDbContext context, McsAppDbContext postgreContext, IMapper mapper,
+            IUserLogService userLogService, MqttProducer mqttPublisher)
         {
             _context = context;
             _postgreContext = postgreContext;
             _mapper = mapper;
             _userLogService = userLogService;
+            _mqttPublisher = mqttPublisher;
         }
 
-        private FilterDefinition<ParameterLogs> SetDefaultFilter(TableModel tableModel, FilterDefinitionBuilder<ParameterLogs> builder)
+        private FilterDefinition<ParameterLogs> SetDefaultFilter(TableModel tableModel,
+            FilterDefinitionBuilder<ParameterLogs> builder)
         {
             var filter = builder.Empty;
 
@@ -48,27 +51,31 @@ namespace MonitorApplication.Repository
                     var deviceIdFilter = builder.Eq(x => x.DeviceId, searchField.DevicecId);
                     filter &= deviceIdFilter;
                 }
+
                 if (searchField.ParameterId != null && searchField.ParameterId != Guid.Empty)
                 {
                     var parameterIdFilter = builder.Eq(x => x.ParameterId, searchField.ParameterId);
                     filter &= parameterIdFilter;
                 }
+
                 if (searchField.ParameterTimeStamp != null && searchField.ParameterTimeStamp != DateTime.MinValue)
                 {
-                    var parameterTimeStampFilter = builder.Eq(x => x.ParameterTimeStamp, searchField.ParameterTimeStamp);
+                    var parameterTimeStampFilter =
+                        builder.Eq(x => x.ParameterTimeStamp, searchField.ParameterTimeStamp);
                     filter &= parameterTimeStampFilter;
                 }
                 else
                 {
                     if (searchField.StartDateFilter != null || searchField.EndDateFilter != null)
                     {
-                        var dateFilter = builder.Gte(x => x.ParameterTimeStamp, searchField.StartDateFilter ?? DateTime.MinValue) &
-                                         builder.Lte(x => x.ParameterTimeStamp, searchField.EndDateFilter ?? DateTime.MaxValue);
+                        var dateFilter = builder.Gte(x => x.ParameterTimeStamp,
+                                             searchField.StartDateFilter ?? DateTime.MinValue) &
+                                         builder.Lte(x => x.ParameterTimeStamp,
+                                             searchField.EndDateFilter ?? DateTime.MaxValue);
                         filter &= dateFilter;
                     }
                 }
             }
-
             return filter;
         }
 
@@ -88,6 +95,7 @@ namespace MonitorApplication.Repository
             {
                 sort = Builders<ParameterLogs>.Sort.Descending(x => x.ParameterTimeStamp);
             }
+
             return sort;
         }
 
@@ -129,7 +137,6 @@ namespace MonitorApplication.Repository
             };
 
             return response;
-
         }
 
         public async Task<List<ParameterLogs>> GetParameterLogsOfLastDayByPage(TableModel tableModel)
@@ -138,8 +145,10 @@ namespace MonitorApplication.Repository
             SortDefinition<ParameterLogs> sort = SetSortDefiniton(tableModel);
             FilterDefinition<ParameterLogs> filter = SetDefaultFilter(tableModel, builder);
 
-            DateTime queryTime = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.ffff"), "yyyy-MM-ddTHH:mm:ss.ffff", CultureInfo.InvariantCulture);
-            var lastHourFilter = builder.Where(x => x.ParameterTimeStamp > DateTime.Now.AddHours(-1) && x.ParameterTimeStamp < queryTime);
+            DateTime queryTime = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.ffff"),
+                "yyyy-MM-ddTHH:mm:ss.ffff", CultureInfo.InvariantCulture);
+            var lastHourFilter = builder.Where(x =>
+                x.ParameterTimeStamp > DateTime.Now.AddHours(-1) && x.ParameterTimeStamp < queryTime);
             filter &= lastHourFilter;
 
             return await _context.ParameterLogs
@@ -201,52 +210,58 @@ namespace MonitorApplication.Repository
             if (parameterSets != null)
             {
                 parameterSets.isActive = isActive;
-
-
                 response = UpdateParameterLog(parameterSetsId, parameterSets);
+
+                if(response)
+                {
+                    var message = new ParameterLogBusinessResponse
+                    {
+                        ParameterIds = parameterSets.ParameterId,
+                        IsActive = isActive,
+                    };
+
+                    //Burada payload parameterSetsId yerine, içerdiği tüm parameterId'ler eklenirse ve bu daha sonrasında RE
+                    // tarafında redis aracılığı ile kontrol edilerek eklenip kaydedilse nasıl olur ?
+                    var payload = JsonConvert.SerializeObject(message);
+
+                    _mqttPublisher.PublishMessage("RE/ParameterLog", $"{payload}");
+
+                    var userLog = new UserLogs
+                    {
+                        Id = Guid.NewGuid(),
+                        UserName = "McsAdmin",
+                        AppName = "MonitorAPI",
+                        Message = $"Parameter logs updated",
+                        LogDate = DateTime.Now,
+                        LogType = UserLogType.Updated
+                    };
+
+                    await _userLogService.SetEventUserLog(userLog);
+                }
             }
-            else return false;
-
-            var userLog = new UserLogs
-            {
-                Id = Guid.NewGuid(),
-                UserName = "McsAdmin",
-                AppName = "MonitorAPI",
-                Message = $"Parameter logs updated",
-                LogDate = DateTime.Now,
-                LogType = UserLogType.Updated
-            };
-
-            await _userLogService.SetEventUserLog(userLog);
-
             return response;
         }
 
         private async Task<ParameterLogsAdd> GetParameterLogsByParameterSetsId(Guid parameterSetsId)
         {
-            var response = await _postgreContext.ParameterLogs.Where(x => x.Id == parameterSetsId).FirstOrDefaultAsync();
+            var response = await _postgreContext.ParameterLogs.Where(x => x.Id == parameterSetsId)
+                .FirstOrDefaultAsync();
             return response;
         }
 
         public bool UpdateParameterLog(Guid parameterSetsId, ParameterLogsAdd updatedParameterLogsModel)
         {
-            var sets = GetParameterLogsByParameterSetsId(parameterSetsId);
-
-            if (sets != null)
+            try
             {
-                try
-                {
-                    _postgreContext.ParameterLogs.Update(updatedParameterLogsModel);
-                    _postgreContext.SaveChanges();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error : Could not update parameter sets model", ex.Message);
-                    return false;
-                }
+                _postgreContext.ParameterLogs.Update(updatedParameterLogsModel);
+                _postgreContext.SaveChanges();
+                return true;
             }
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error : Could not update parameter sets model", ex.Message);
+                return false;
+            }
         }
     }
 }

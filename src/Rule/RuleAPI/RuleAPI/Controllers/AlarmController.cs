@@ -7,11 +7,13 @@ using RuleApplication.Validations;
 using Serilog;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RuleAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AlarmController : ControllerBase
     {
         private readonly IAlarmService _alarmService;

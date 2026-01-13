@@ -25,7 +25,8 @@ namespace LoginApplication.Services
         private readonly string _jwtKey;
         private readonly ITokenInformationService _tokenInformationService;
 
-        public LoginService(IUserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration, ITokenInformationService tokenInformationService)
+        public LoginService(IUserService userService, Microsoft.Extensions.Configuration.IConfiguration configuration,
+            ITokenInformationService tokenInformationService)
         {
             _userService = userService;
             _jwtKey = configuration["jwt:Key"];
@@ -35,15 +36,9 @@ namespace LoginApplication.Services
         public async Task<bool> ValidateUser(string userName, string password)
         {
             var user = await _userService.GetUserByName(userName);
-            if (user == null)
-            {
-                return false;
-            }
+            if (user == null) return false;
 
-            if (user.UserName == userName && _userService.Decrypt(user.Password)== _userService.Decrypt(password))
-            {
-                return true;
-            }
+            if (user.UserName == userName && _userService.Decrypt(user.Password) == password) return true;
             return false;
         }
 
@@ -52,20 +47,20 @@ namespace LoginApplication.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.Role,"admin"),
-                new Claim(JwtRegisteredClaimNames.Email,$"{userName}@deneme.com")
+                new Claim(ClaimTypes.Role, "admin"),
+                new Claim(JwtRegisteredClaimNames.Email, $"{userName}@deneme.com")
             };
- 
-
-           var securityToken = new JwtSecurityToken
-                (
-                    issuer: "McsGen3.com",
-                    audience: "McsGen3.com",
-                    expires: DateTime.Now.AddMinutes(10),
-                    claims : claims,
-                    notBefore: DateTime.Now,
-                    signingCredentials : new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),SecurityAlgorithms.HmacSha256)
-                );
+            
+            var securityToken = new JwtSecurityToken
+            (
+                issuer: "McsGen3.com",
+                audience: "McsGen3.com",
+                expires: DateTime.Now.AddMinutes(10),
+                claims: claims,
+                notBefore: DateTime.Now,
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),
+                    SecurityAlgorithms.HmacSha256)
+            );
 
             var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
             return token;
@@ -79,12 +74,12 @@ namespace LoginApplication.Services
         public async Task<LoginResponses> Login(LoginRequest request)
         {
             var user = await _userService.GetUserByName(request.UserName);
-            
+
             if (user == null) return null;
 
-            var validaUserResult = await ValidateUser(request.UserName, request.Password);
+            var validateUserResult = await ValidateUser(request.UserName, request.Password);
 
-            if (!validaUserResult) return null;
+            if (!validateUserResult) return null;
 
             var token = GenerateJwtToken(request.UserName);
 

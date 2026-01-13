@@ -17,6 +17,7 @@
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="JWT" Version="10.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RestSharp" Version="108.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
   </ItemGroup>
 

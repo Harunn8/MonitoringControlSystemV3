@@ -64,7 +64,6 @@ namespace MonitorAPI
                 var settings = sp.GetRequiredService<IOptions<MqttSettings>>().Value;
 
                 return new MqttClientOptionsBuilder()
-                    .WithClientId("telemetry")
                     .WithTcpServer(settings.IpAddress, settings.Port)
                     .WithCleanSession()
                     .Build();
@@ -121,6 +120,7 @@ namespace MonitorAPI
             services.AddScoped<IParameterLogService, ParameterLogService>();
             services.AddScoped<IUserLogService, UserLogService>();
 
+            Console.WriteLine("Monitor API started");
             #endregion
 
             services.AddControllers();

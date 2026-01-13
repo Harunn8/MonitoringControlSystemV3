@@ -127,7 +127,8 @@ namespace UserApplication.Services
                     {
                         using (var reader = new StreamReader(cryptoStream))
                         {
-                            return reader.ReadToEnd();
+                            var aa = reader.ReadToEnd();
+                            return aa;
                         }
                     }
                 }

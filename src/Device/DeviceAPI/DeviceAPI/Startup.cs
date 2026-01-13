@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.HttpHelper;
 using TokenInformation.Base;
 using TokenInformation;
 using Microsoft.AspNetCore.Http;
@@ -120,6 +121,7 @@ namespace DeviceAPI
             services.AddScoped<IUserLogService, UserLogService>();
             services.TryAddTransient<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ITokenInformationService, TokenInformationService>();
+            services.AddSingleton<DeviceHttpHelper>();
 
             Log.Information("Device API started");
             #endregion
