@@ -61,7 +61,7 @@ namespace DeviceAPI
 
             services.Configure<MqttSettings>(Configuration.GetSection("Mqtt"));
 
-            services.AddScoped<IMqttClientOptions>(sp =>
+            services.AddSingleton<IMqttClientOptions>(sp =>
             {
                 var config = sp.GetRequiredService<IConfiguration>()
                                .GetSection("Mqtt")
@@ -79,8 +79,8 @@ namespace DeviceAPI
                 return factory.CreateMqttClient();
             });
 
-            services.AddScoped<IMqttConnection, MqttConnection>();
-            services.AddScoped<MqttProducer>();
+            services.AddSingleton<IMqttConnection, MqttConnection>();
+            services.AddSingleton<MqttProducer>();
 
             Log.Information("Mqtt connection was establish");
             #endregion
@@ -121,7 +121,7 @@ namespace DeviceAPI
             services.AddScoped<IUserLogService, UserLogService>();
             services.TryAddTransient<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ITokenInformationService, TokenInformationService>();
-            services.AddSingleton<DeviceHttpHelper>();
+            //services.AddSingleton<DeviceHttpHelper>();
 
             Log.Information("Device API started");
             #endregion

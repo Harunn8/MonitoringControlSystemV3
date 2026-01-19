@@ -4,17 +4,18 @@ using System.Threading.Tasks;
 using Application.HttpHelper.Models;
 using RestSharp;
 using Application.HttpHelper.HttpClientResponse;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.HttpHelper
 {
     public class DeviceHttpHelper
     {
-        private string _url;
+        //private readonly string _url;
         private HttpClientSettings _settings;
         
-        public DeviceHttpHelper(string url,HttpClientSettings settings)
+        public DeviceHttpHelper(HttpClientSettings settings)
         {
-            _url = url;
+            //_url = configuration["Endpoints:LoginUrl"];
             _settings = settings;
         }
 
@@ -24,7 +25,7 @@ namespace Application.HttpHelper
             RestResponse response;
             RestClient client;
 
-            client = new RestClient(_url);
+            client = new RestClient(url);
             request = new RestRequest("",Method.Get);
 
             response = await client.ExecuteAsync(request);

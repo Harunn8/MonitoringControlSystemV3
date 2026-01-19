@@ -207,7 +207,7 @@ namespace MonitorApplication.Repository
 
             var parameterSets = await GetParameterLogsByParameterSetsId(parameterSetsId);
 
-            if (parameterSets != null)
+            if (parameterSets != null && parameterSets.ParameterId.Count != 0)
             {
                 parameterSets.isActive = isActive;
                 response = UpdateParameterLog(parameterSetsId, parameterSets);
@@ -224,7 +224,7 @@ namespace MonitorApplication.Repository
                     // tarafında redis aracılığı ile kontrol edilerek eklenip kaydedilse nasıl olur ?
                     var payload = JsonConvert.SerializeObject(message);
 
-                    _mqttPublisher.PublishMessage("RE/ParameterLog", $"{payload}");
+                    _mqttPublisher.PublishMessage("RE/ParameterLog/Start", $"{payload}");
 
                     var userLog = new UserLogs
                     {
