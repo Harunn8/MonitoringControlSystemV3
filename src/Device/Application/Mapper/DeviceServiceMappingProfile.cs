@@ -1,11 +1,7 @@
-﻿using Application.Models;
-using Application.Responses;
+﻿using Application.Responses;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DeviceApplication.Models;
+using McsCore.Entities;
 
 namespace Application.Mapper
 {
@@ -16,7 +12,10 @@ namespace Application.Mapper
             CreateMap<SnmpDeviceModel, SnmpDeviceResponses>()
                 .ReverseMap();
 
-            CreateMap<TcpDeviceModel,TcpDeviceResponses>()
+            CreateMap<BaseDeviceModel,SnmpDeviceModel>()
+                .ReverseMap();
+
+            CreateMap<SnmpDeviceModel,SnmpDeviceResponses>()
                 .ReverseMap();
         }
     }

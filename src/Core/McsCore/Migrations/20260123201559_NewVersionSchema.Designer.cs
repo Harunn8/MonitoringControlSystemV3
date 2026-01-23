@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260123201559_NewVersionSchema")]
+    partial class NewVersionSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,9 +26,6 @@ namespace McsCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("BaseDeviceModelId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Condition")
@@ -70,8 +69,6 @@ namespace McsCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BaseDeviceModelId");
-
                     b.ToTable("Alarms");
                 });
 
@@ -79,6 +76,9 @@ namespace McsCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AlarmsId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("BrandName")
@@ -109,6 +109,8 @@ namespace McsCore.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlarmsId");
 
                     b.HasIndex("PagDevicesId");
 
@@ -259,22 +261,16 @@ namespace McsCore.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.Alarms", b =>
-                {
-                    b.HasOne("McsCore.Entities.BaseDeviceModel", null)
-                        .WithMany("Alarms")
-                        .HasForeignKey("BaseDeviceModelId");
-                });
-
             modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
                 {
+                    b.HasOne("McsCore.Entities.Alarms", "Alarms")
+                        .WithMany()
+                        .HasForeignKey("AlarmsId");
+
                     b.HasOne("McsCore.Entities.PagDevices", null)
                         .WithMany("Device")
                         .HasForeignKey("PagDevicesId");
-                });
 
-            modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
-                {
                     b.Navigation("Alarms");
                 });
 

@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    [Migration("20251225142213_AddParameterTimeLogsTsModel")]
-    partial class AddParameterTimeLogsTsModel
+    [Migration("20260123201723_NewVersionSchemaV2")]
+    partial class NewVersionSchemaV2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,9 @@ namespace McsCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BaseDeviceModelId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Condition")
@@ -69,7 +72,101 @@ namespace McsCore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BaseDeviceModelId");
+
                     b.ToTable("Alarms");
+                });
+
+            modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BrandName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CommunicationData")
+                        .HasColumnType("text");
+
+                    b.Property<int>("CommunicationType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModelName")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("PagDevicesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PagDevicesId");
+
+                    b.ToTable("Devices");
+                });
+
+            modelBuilder.Entity("McsCore.Entities.PagDevices", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActived")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PagDeviceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PagId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Port")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Retry")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Timeout")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PagDevices");
+                });
+
+            modelBuilder.Entity("McsCore.Entities.Pags", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pags");
                 });
 
             modelBuilder.Entity("McsCore.Entities.ParameterLogTs", b =>
@@ -80,6 +177,9 @@ namespace McsCore.Migrations
 
                     b.Property<List<Guid>>("DeviceId")
                         .HasColumnType("uuid[]");
+
+                    b.Property<int>("Interval")
+                        .HasColumnType("integer");
 
                     b.Property<List<Guid>>("ParameterId")
                         .HasColumnType("uuid[]");
@@ -118,28 +218,6 @@ namespace McsCore.Migrations
                     b.ToTable("ParameterLogs");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.ParameterModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Oid")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("SnmpDeviceId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SnmpDeviceId");
-
-                    b.ToTable("ParameterModel");
-                });
-
             modelBuilder.Entity("McsCore.Entities.Scripts", b =>
                 {
                     b.Property<Guid>("Id")
@@ -163,92 +241,6 @@ namespace McsCore.Migrations
                     b.ToTable("Scripts");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.SnmpDevice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("DeviceName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("IpAddress")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Port")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ReadCommunity")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Retry")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SnmpVersion")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Timeout")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Version")
-                        .HasColumnType("text");
-
-                    b.Property<string>("WriteCommunity")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SnmpDevices");
-                });
-
-            modelBuilder.Entity("McsCore.Entities.TcpData", b =>
-                {
-                    b.Property<Guid>("ParameterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ParameterName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Request")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("TcpDeviceId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ParameterId");
-
-                    b.HasIndex("TcpDeviceId");
-
-                    b.ToTable("TcpData");
-                });
-
-            modelBuilder.Entity("McsCore.Entities.TcpDevice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("DeviceName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("IpAddress")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("PagId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Port")
-                        .HasColumnType("integer");
-
-                    b.Property<List<string>>("TcpFormat")
-                        .HasColumnType("text[]");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TcpDevices");
-                });
-
             modelBuilder.Entity("McsCore.Entities.Users", b =>
                 {
                     b.Property<Guid>("Id")
@@ -269,28 +261,28 @@ namespace McsCore.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.ParameterModel", b =>
+            modelBuilder.Entity("McsCore.Entities.Alarms", b =>
                 {
-                    b.HasOne("McsCore.Entities.SnmpDevice", null)
-                        .WithMany("Parameters")
-                        .HasForeignKey("SnmpDeviceId");
+                    b.HasOne("McsCore.Entities.BaseDeviceModel", null)
+                        .WithMany("Alarms")
+                        .HasForeignKey("BaseDeviceModelId");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.TcpData", b =>
+            modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
                 {
-                    b.HasOne("McsCore.Entities.TcpDevice", null)
-                        .WithMany("TcpData")
-                        .HasForeignKey("TcpDeviceId");
+                    b.HasOne("McsCore.Entities.PagDevices", null)
+                        .WithMany("Device")
+                        .HasForeignKey("PagDevicesId");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.SnmpDevice", b =>
+            modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
                 {
-                    b.Navigation("Parameters");
+                    b.Navigation("Alarms");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.TcpDevice", b =>
+            modelBuilder.Entity("McsCore.Entities.PagDevices", b =>
                 {
-                    b.Navigation("TcpData");
+                    b.Navigation("Device");
                 });
 #pragma warning restore 612, 618
         }

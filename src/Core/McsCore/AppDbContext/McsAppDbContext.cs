@@ -12,8 +12,9 @@ namespace McsCore.AppDbContext
     {
         public McsAppDbContext(DbContextOptions<McsAppDbContext> options) : base(options) { }
 
-        public DbSet<SnmpDevice> SnmpDevices { get; set; }
-        public DbSet<TcpDevice> TcpDevices { get; set; }
+        public DbSet<BaseDeviceModel> Devices { get; set; }
+        public DbSet<PagDevices> PagDevices { get; set; }
+        public DbSet<Pags> Pags { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Scripts> Scripts { get; set; }
         public DbSet<Alarms> Alarms { get; set; }

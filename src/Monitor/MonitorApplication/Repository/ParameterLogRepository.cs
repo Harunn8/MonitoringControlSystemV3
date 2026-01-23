@@ -216,8 +216,11 @@ namespace MonitorApplication.Repository
                 {
                     var message = new ParameterLogBusinessResponse
                     {
-                        ParameterIds = parameterSets.ParameterId,
-                        IsActive = isActive,
+                        Id = parameterSetsId,
+                        //DeviceId = parameterSets.DeviceId,
+                        ParameterSetsName = parameterSets.ParameterSetsName == null ? parameterSets.ParameterSetsName : "demo",
+                        ParameterId = parameterSets.ParameterId,
+                        isActive = isActive,
                     };
 
                     //Burada payload parameterSetsId yerine, içerdiği tüm parameterId'ler eklenirse ve bu daha sonrasında RE

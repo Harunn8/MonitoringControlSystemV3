@@ -14,6 +14,7 @@ namespace McsCore.Entities
         public Guid UserId { get; set; }
         public string UserName { get; set; }
         public string AppName { get; set; }
+        public string MethodName { get; set; }
         public string Message { get; set; }
         public DateTime LogDate { get; set; }
         public UserLogType LogType { get; set; }

@@ -1,14 +1,13 @@
-﻿using System;
+﻿using McsCore.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Application.Models;
-using McsCore.Entities;
 
-namespace Application.Models
+namespace DeviceApplication.Models
 {
-    public class SnmpDeviceModel : SnmpDeviceModels
+    public class SnmpDeviceModel : BaseDeviceModel
     {
     }
 }

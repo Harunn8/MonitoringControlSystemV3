@@ -1,6 +1,4 @@
 ﻿using Application.Mapper;
-using Application.Services;
-using Application.Services.Base;
 using AutoMapper;
 using McsCore.AppDbContext;
 using McsCore.AppDbContext.Mongo;
@@ -35,6 +33,10 @@ using TokenInformation.Base;
 using TokenInformation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using DeviceApplication.Services.Base;
+using DeviceApplication.Services;
+using DeviceApplication.Repositories.Base;
+using DeviceApplication.Repositories;
 
 
 namespace DeviceAPI
@@ -116,8 +118,8 @@ namespace DeviceAPI
 
             #region Services
             services.AddAutoMapper(typeof(DeviceServiceMappingProfile));
-            services.AddScoped<ISnmpDeviceService, SnmpDeviceService>();
-            services.AddScoped<ITcpDeviceService, TcpDeviceService>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
+            services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IUserLogService, UserLogService>();
             services.TryAddTransient<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ITokenInformationService, TokenInformationService>();
