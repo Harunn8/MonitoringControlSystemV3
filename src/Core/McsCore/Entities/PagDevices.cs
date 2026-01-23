@@ -8,9 +8,9 @@ namespace McsCore.Entities
 {
     public class PagDevices
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid PagId { get; set; }
-        public Guid PagDeviceId { get; set; }
+        public Guid PagDeviceId { get; set; } = Guid.NewGuid();
         public string IpAddress { get; set; }
         public int Port { get; set; }
         public int Timeout { get; set; }
