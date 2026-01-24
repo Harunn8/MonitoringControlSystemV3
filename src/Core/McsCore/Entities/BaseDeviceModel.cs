@@ -9,7 +9,6 @@ namespace McsCore.Entities
     public class BaseDeviceModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid DeviceId { get; set; } = Guid.NewGuid();
         public CommunicationType CommunicationType { get; set; }
         public string BrandName { get; set; }
         public string ModelName { get; set; }

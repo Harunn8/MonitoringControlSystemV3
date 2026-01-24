@@ -183,7 +183,7 @@ namespace MonitorApplication.Repository
 
                 var userLog = new UserLogs
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "MonitorAPI",
                     Message = $"Parameter logs added with Id: {addModel.ParameterSetsName}",
@@ -231,7 +231,7 @@ namespace MonitorApplication.Repository
 
                     var userLog = new UserLogs
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         UserName = "McsAdmin",
                         AppName = "MonitorAPI",
                         Message = $"Parameter logs updated",

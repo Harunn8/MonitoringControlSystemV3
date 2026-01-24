@@ -12,6 +12,7 @@ namespace McsCore.Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
+        public Guid PagId { get; set; }
         public Guid DeviceId { get; set; }
         public string DeviceName { get; set; }
         public Guid ParameterId { get; set; }

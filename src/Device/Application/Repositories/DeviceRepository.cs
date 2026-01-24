@@ -46,7 +46,18 @@ namespace DeviceApplication.Repositories
         {
             try
             {
-                tcpDeviceModel.CommunicationData = JsonConvert.SerializeObject(tcpDeviceModel.TcpCommunicationData);
+                string tcpFormat = string.Empty;
+                var tcpCommData = new TcpCommunicationData();
+                var alarms = new Alarms();
+
+                var commData = new
+                {
+                    tcpCommData = tcpDeviceModel.TcpCommunicationData,
+                    tcpFormat = tcpDeviceModel.TcpFormat,
+                    alarms = tcpDeviceModel.Alarms
+                };
+
+                tcpDeviceModel.CommunicationData = JsonConvert.SerializeObject(commData);
                 
                 await _dbContext.Devices.AddAsync(tcpDeviceModel);
                 await _dbContext.SaveChangesAsync();
@@ -63,7 +74,7 @@ namespace DeviceApplication.Repositories
 
         public async Task<bool> DeleteDevice(Guid id)
         {
-            var device = await _dbContext.Devices.Where(x => x.DeviceId == id).FirstOrDefaultAsync();
+            var device = await _dbContext.Devices.Where(x => x.Id == id).FirstOrDefaultAsync();
             if(device != null)
             {
                 _dbContext.Devices.Remove(device);
@@ -119,7 +130,7 @@ namespace DeviceApplication.Repositories
 
         public async Task<BaseDeviceModel> GetDeviceById(Guid id)
         {
-            var device = await _dbContext.Devices.Where(x => x.DeviceId == id)
+            var device = await _dbContext.Devices.Where(x => x.Id == id)
                 .Include(x => x.Alarms)
                 .FirstOrDefaultAsync();
             return device;
@@ -146,7 +157,7 @@ namespace DeviceApplication.Repositories
 
         public async Task<SnmpDeviceModel> GetSnmpDeviceById(Guid id)
         {
-            var device = await _dbContext.Devices.Where(x => x.DeviceId == id)
+            var device = await _dbContext.Devices.Where(x => x.Id == id)
                 .Include(x => x.Alarms)
                 .FirstOrDefaultAsync();
 
@@ -167,7 +178,7 @@ namespace DeviceApplication.Repositories
 
         public async Task<TcpDeviceModel> GetTcpDeviceById(Guid id)
         {
-            var device = await _dbContext.Devices.Where(x => x.DeviceId == id)
+            var device = await _dbContext.Devices.Where(x => x.Id == id)
                .Include(x => x.Alarms)
                .FirstOrDefaultAsync();
 
@@ -177,7 +188,7 @@ namespace DeviceApplication.Repositories
 
         public async Task<bool> UpdateSnmpDevice(Guid id, SnmpDeviceAddModel updateModel)
         {
-            var device = await _dbContext.Devices.Where(x => x.DeviceId == id && x.CommunicationType == CommunicationType.SNMP)
+            var device = await _dbContext.Devices.Where(x => x.Id == id && x.CommunicationType == CommunicationType.SNMP)
                 .Include(x => x.Alarms)
                 .FirstOrDefaultAsync();
 
@@ -201,7 +212,7 @@ namespace DeviceApplication.Repositories
 
         public async Task<bool> UpdateTcpDevice(Guid id, TcpDeviceAddModel updateModel)
         {
-            var device = await _dbContext.Devices.Where(x => x.DeviceId == id && x.CommunicationType == CommunicationType.TCP)
+            var device = await _dbContext.Devices.Where(x => x.Id == id && x.CommunicationType == CommunicationType.TCP)
                   .Include(x => x.Alarms)
                   .FirstOrDefaultAsync();
 
