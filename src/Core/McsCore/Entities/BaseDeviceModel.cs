@@ -17,12 +17,12 @@ namespace McsCore.Entities
         public string DeviceName { get; set; }
         public string Version { get; set; }
         public string CommunicationData { get; set; }
-        public List<Alarms> Alarms { get; set; }
+        public IEnumerable<Alarms> Alarms { get; set; }
     }
 
     public enum CommunicationType
     {
-         SNMP,
-         TCP
+         SNMP = 0,
+         TCP = 1
     }
 }

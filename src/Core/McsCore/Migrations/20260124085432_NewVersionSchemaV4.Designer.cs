@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using McsCore.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace McsCore.Migrations
 {
     [DbContext(typeof(McsAppDbContext))]
-    partial class McsAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260124085432_NewVersionSchemaV4")]
+    partial class NewVersionSchemaV4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,10 +104,15 @@ namespace McsCore.Migrations
                     b.Property<string>("ModelName")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("PagDevicesId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Version")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PagDevicesId");
 
                     b.ToTable("Devices");
                 });
@@ -144,8 +151,6 @@ namespace McsCore.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
 
                     b.ToTable("PagDevices");
                 });
@@ -266,20 +271,21 @@ namespace McsCore.Migrations
                         .HasForeignKey("BaseDeviceModelId");
                 });
 
-            modelBuilder.Entity("McsCore.Entities.PagDevices", b =>
+            modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
                 {
-                    b.HasOne("McsCore.Entities.BaseDeviceModel", "Device")
-                        .WithMany()
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
+                    b.HasOne("McsCore.Entities.PagDevices", null)
+                        .WithMany("Device")
+                        .HasForeignKey("PagDevicesId");
                 });
 
             modelBuilder.Entity("McsCore.Entities.BaseDeviceModel", b =>
                 {
                     b.Navigation("Alarms");
+                });
+
+            modelBuilder.Entity("McsCore.Entities.PagDevices", b =>
+                {
+                    b.Navigation("Device");
                 });
 #pragma warning restore 612, 618
         }

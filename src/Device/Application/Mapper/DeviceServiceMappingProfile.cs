@@ -1,6 +1,7 @@
 ﻿using Application.Responses;
 using AutoMapper;
 using DeviceApplication.Models;
+using DeviceApplication.Responses;
 using McsCore.Entities;
 
 namespace Application.Mapper
@@ -16,6 +17,12 @@ namespace Application.Mapper
                 .ReverseMap();
 
             CreateMap<SnmpDeviceModel,SnmpDeviceResponses>()
+                .ReverseMap();
+
+            CreateMap<PagDevices, PagDeviceResponses>()
+                .ReverseMap();
+
+            CreateMap<PagDeviceAddModel,PagDevices>()
                 .ReverseMap();
         }
     }

@@ -70,7 +70,6 @@ namespace DeviceAPI
                                .Get<MqttSettings>();
 
                 return new MqttClientOptionsBuilder()
-                    .WithClientId("telemetry")
                     .WithTcpServer(config.IpAddress, config.Port)
                     .Build();
             });
@@ -120,6 +119,10 @@ namespace DeviceAPI
             services.AddAutoMapper(typeof(DeviceServiceMappingProfile));
             services.AddScoped<IDeviceRepository, DeviceRepository>();
             services.AddScoped<IDeviceService, DeviceService>();
+
+            services.AddScoped<IPagDeviceRepository, PagDeviceRepository>();
+            services.AddScoped<IPagDeviceService, PagDeviceService>();
+
             services.AddScoped<IUserLogService, UserLogService>();
             services.TryAddTransient<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ITokenInformationService, TokenInformationService>();

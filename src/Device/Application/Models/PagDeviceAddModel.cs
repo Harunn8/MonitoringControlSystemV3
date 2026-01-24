@@ -4,20 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace McsCore.Entities
+namespace DeviceApplication.Models
 {
-    public class PagDevices
+    public class PagDeviceAddModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public string PagDeviceName { get; set; }
         public Guid PagId { get; set; }
         public Guid DeviceId { get; set; }
-        public BaseDeviceModel Device { get; set; }
         public string IpAddress { get; set; }
         public int Port { get; set; }
         public int Timeout { get; set; }
-        public int Retry {  get; set; }
-        public bool IsActived { get; set; }
-        public bool IsDeleted { get; set; }
+        public int Retry { get; set; }
+        public bool IsActive { get; set; }
     }
 }
