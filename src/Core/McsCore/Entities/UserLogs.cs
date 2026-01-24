@@ -10,8 +10,7 @@ namespace McsCore.Entities
 {
     public class UserLogs
     {
-        public Guid Id { get; set; }
-        public Guid UserId { get; set; }
+        public string Id { get; set; }
         public string UserName { get; set; }
         public string AppName { get; set; }
         public string MethodName { get; set; }

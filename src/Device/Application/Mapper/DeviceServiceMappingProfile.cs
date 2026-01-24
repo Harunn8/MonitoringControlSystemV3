@@ -24,6 +24,9 @@ namespace Application.Mapper
 
             CreateMap<PagDeviceAddModel,PagDevices>()
                 .ReverseMap();
+
+            CreateMap<Pags,PagResponse>()
+                .ReverseMap();
         }
     }
 }

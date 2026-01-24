@@ -45,16 +45,7 @@ namespace McsUserLogs.Services
         }
         public async Task<List<McsUserLogResponse>> GetUserLogByUserId(Guid userId)
         {
-            var user = await _dbContext.Users.Where(x => x.Id == userId)
-                .FirstOrDefaultAsync();
-
-            if (user == null)
-            {
-                return new List<McsUserLogResponse>();
-            }
-            var logs = await _userLogs.Find(x => x.UserId == userId).ToListAsync();
-            var response = _mapper.Map<List<McsUserLogResponse>>(logs);
-            return new List<McsUserLogResponse>(response);
+           throw new NotImplementedException();
         }
     }
 }

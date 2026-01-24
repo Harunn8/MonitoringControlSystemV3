@@ -123,6 +123,9 @@ namespace DeviceAPI
             services.AddScoped<IPagDeviceRepository, PagDeviceRepository>();
             services.AddScoped<IPagDeviceService, PagDeviceService>();
 
+            services.AddScoped<IPagRepository,PagRepository>();
+            services.AddScoped<IPagService, PagService>();
+
             services.AddScoped<IUserLogService, UserLogService>();
             services.TryAddTransient<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ITokenInformationService, TokenInformationService>();

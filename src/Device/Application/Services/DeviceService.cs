@@ -31,7 +31,7 @@ namespace DeviceApplication.Services
             {
                 var userLogModel = new McsUserLogModel()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.DeviceService",
                     MethodName = nameof(AddSnmpDevice),
@@ -53,7 +53,7 @@ namespace DeviceApplication.Services
             {
                 var userLogModel = new McsUserLogModel()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.DeviceService",
                     MethodName = nameof(AddTcpDevice),
@@ -75,7 +75,7 @@ namespace DeviceApplication.Services
             {
                 var userLogModel = new McsUserLogModel()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.DeviceService",
                     MethodName = nameof(DeleteDevice),
@@ -163,7 +163,7 @@ namespace DeviceApplication.Services
             {
                 var userLogModel = new McsUserLogModel()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.DeviceService",
                     MethodName = nameof(UpdateSnmpDevice),
@@ -187,7 +187,7 @@ namespace DeviceApplication.Services
                 {
                     var userLogModel = new McsUserLogModel()
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         UserName = "McsAdmin",
                         AppName = "DeviceApplication.Services.DeviceService",
                         MethodName = nameof(UpdateTcpDevice),

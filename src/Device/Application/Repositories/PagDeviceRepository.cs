@@ -119,15 +119,17 @@ namespace DeviceApplication.Repositories
             return response;
         }
 
-        public async Task<bool> UpdatePagDevice(Guid id, PagDevices updatePagDeviceModel)
+        public async Task<bool> UpdatePagDevice(Guid id, PagDeviceAddModel updatePagDeviceModel)
         {
             var pagDevice = await GetPagDeviceById(id);
 
-            if (pagDevice != null)
+            var data = _mapper.Map<PagDevices>(pagDevice);
+
+            if (data != null)
             {
                 try
                 {
-                    _dbContext.PagDevices.Update(updatePagDeviceModel);
+                    _dbContext.PagDevices.Update(data);
                     await _dbContext.SaveChangesAsync();
                     return true;
                 }

@@ -43,7 +43,7 @@ namespace RuleApplication.Services
                 await _dbContext.SaveChangesAsync();
                 await _userLog.SetEventUserLog(new McsCore.Entities.UserLogs
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = _tokenInformation.GetUserNameFromToken(_token),
                     AppName = "RE/PolicyScriptService/AddPolicyScript",
                     Message = $"Create new script: {script.ScriptName}",
@@ -68,8 +68,7 @@ namespace RuleApplication.Services
 
                 await _userLog.SetEventUserLog(new McsCore.Entities.UserLogs
                 {
-                    Id = Guid.NewGuid(),
-                    UserId = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     AppName = "RE/PolicyScriptService/DeletePolicyScript",
                     Message = $"Delete script: {script.ScriptName}",
                     LogDate = DateTime.UtcNow,
@@ -120,8 +119,7 @@ namespace RuleApplication.Services
                 await _dbContext.SaveChangesAsync();
                 await _userLog.SetEventUserLog(new McsCore.Entities.UserLogs
                 {
-                    Id = id,
-                    UserId = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     AppName = "RE/PolicyScriptService/UpdatePolicyScript",
                     Message = $"Update script: {script.ScriptName}",
                     LogDate = DateTime.UtcNow,

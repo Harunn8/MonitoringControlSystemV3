@@ -34,7 +34,7 @@ namespace DeviceApplication.Services
             {
                 var userLogModel = new UserLogs()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.PagDeviceService",
                     MethodName = nameof(AddPagDevice),
@@ -57,7 +57,7 @@ namespace DeviceApplication.Services
             {
                 var userLogModel = new UserLogs()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.PagDeviceService",
                     MethodName = nameof(AddPagDevice),
@@ -102,7 +102,7 @@ namespace DeviceApplication.Services
             return response;
         }
 
-        public async Task<bool> UpdatePagDevice(Guid id, PagDevices updatePagDeviceModel)
+        public async Task<bool> UpdatePagDevice(Guid id, PagDeviceAddModel updatePagDeviceModel)
         {
             var response = await _repository.UpdatePagDevice(id, updatePagDeviceModel);
             return response;
@@ -133,11 +133,11 @@ namespace DeviceApplication.Services
 
                 var userLogModel = new UserLogs()
                 {
-                    //Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     UserName = "McsAdmin",
                     AppName = "DeviceApplication.Services.PagDeviceService",
                     MethodName = nameof(StartOrStopCommunication),
-                    Message = $"{pagDevice.PagDeviceName} Communication Status Updated",
+                    Message = $"{pagDevice.PagDeviceName} communication status updated",
                     LogDate = DateTime.Now,
                     LogType = UserLogType.Updated
                 };

@@ -64,7 +64,7 @@ namespace DeviceAPI.Controllers
         }
 
         [HttpPut("updatepagdevice")]
-        public async Task<ActionResult> UpdatePagDevice(Guid pagDeviceId, PagDevices updatePagDeviceModel)
+        public async Task<ActionResult> UpdatePagDevice(Guid pagDeviceId, PagDeviceAddModel updatePagDeviceModel)
         {
             var response = await _pagDeviceService.UpdatePagDevice(pagDeviceId, updatePagDeviceModel);
 

@@ -17,7 +17,7 @@ namespace DeviceApplication.Services.Base
         public Task<List<PagDeviceResponses>> GetPagDeviceByPagId(Guid pagId);
         public Task<List<PagDeviceResponses>> GetPagDeviceByCommunicationType(CommunicationType communicationType);
         public Task<bool> AddPagDevice(PagDeviceAddModel pagDeviceModel);
-        public Task<bool> UpdatePagDevice(Guid id, PagDevices updatePagDeviceModel);
+        public Task<bool> UpdatePagDevice(Guid id, PagDeviceAddModel updatePagDeviceModel);
         public Task<bool> DeletePagDevice(Guid id);
         public Task<bool> StartOrStopCommunication(Guid pagDeviceId, bool isActive);
     }
