@@ -18,7 +18,7 @@ namespace DeviceApplication.Responses
         public int Timeout { get; set; }
         public int Retry { get; set; }
         public CommunicationType CommunicationType { get; set; }
-        public string CommunicationData { get; set; }
+        public BaseDeviceModel Device{ get; set; }
         public bool IsActive { get; set; }
     }
 }

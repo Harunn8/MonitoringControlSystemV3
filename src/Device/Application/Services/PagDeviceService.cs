@@ -1,4 +1,5 @@
-﻿using DeviceApplication.Models;
+﻿using Application.Responses;
+using DeviceApplication.Models;
 using DeviceApplication.Repositories.Base;
 using DeviceApplication.Responses;
 using DeviceApplication.Services.Base;
@@ -90,7 +91,7 @@ namespace DeviceApplication.Services
             return response;
         }
 
-        public async Task<PagDevices> GetPagDeviceById(Guid id)
+        public async Task<PagDeviceResponses> GetPagDeviceById(Guid id)
         {
             var response = await _repository.GetPagDeviceById(id);
             return response;
@@ -111,25 +112,14 @@ namespace DeviceApplication.Services
         public async Task<bool> StartOrStopCommunication(Guid pagDeviceId, bool isActive)
         {
             var pagDevice = await _repository.GetPagDeviceById(pagDeviceId);
+            pagDevice.Id = pagDeviceId;
+            pagDevice.IsActive = isActive;
 
             if (pagDevice != null)
             {
-                var pagDevicePayload = new PagDevices()
-                {
-                    Id = pagDevice.Id,
-                    PagDeviceName = pagDevice.PagDeviceName,
-                    PagId = pagDevice.PagId,
-                    DeviceId = pagDevice.DeviceId,
-                    IpAddress = pagDevice.IpAddress,
-                    Port = pagDevice.Port,
-                    Timeout = pagDevice.Timeout,
-                    IsActived = isActive,
-                    Device = pagDevice.Device
-                };
+                var payload = JsonConvert.SerializeObject(pagDevice);
 
-                var payload = JsonConvert.SerializeObject(pagDevicePayload);
-
-                _mqtt.PublishMessage("DCS/StartCommunication", $"{payload}");
+                _mqtt.PublishMessage("DCS/StartOrStopCommunication", $"{payload}");
 
                 var userLogModel = new UserLogs()
                 {

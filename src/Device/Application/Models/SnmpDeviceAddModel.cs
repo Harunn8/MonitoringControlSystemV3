@@ -17,8 +17,8 @@ namespace DeviceApplication.Models
 
     public enum SnmpVersion
     {
-        V1,
-        V2
+        V1 = 1,
+        V2 = 2
     }
 
     public class ParameterModel

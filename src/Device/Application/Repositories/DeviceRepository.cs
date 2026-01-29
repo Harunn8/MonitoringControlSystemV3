@@ -26,9 +26,22 @@ namespace DeviceApplication.Repositories
 
         public async Task<bool> AddSnmpDevice(SnmpDeviceAddModel snmpDeviceModel)
         {
+            var Parameters = new ParameterModel();
+            var SnmpVersion = new SnmpVersion();
+            var ReadCommunity = string.Empty;
+            var WriteCommunity = string.Empty;
+
             try
             {
-                snmpDeviceModel.CommunicationData = JsonConvert.SerializeObject(snmpDeviceModel.Parameters);
+                var communicationDataModel = new
+                {
+                    Parameters = snmpDeviceModel.Parameters,
+                    SnmpVersion = snmpDeviceModel.SnmpVersion,
+                    ReadCommunity = snmpDeviceModel.ReadCommunity,
+                    WriteCommunity = snmpDeviceModel.WriteCommunity,
+                };
+
+                snmpDeviceModel.CommunicationData = JsonConvert.SerializeObject(communicationDataModel);
                 
                 await _dbContext.Devices.AddAsync(snmpDeviceModel);
                 await _dbContext.SaveChangesAsync();

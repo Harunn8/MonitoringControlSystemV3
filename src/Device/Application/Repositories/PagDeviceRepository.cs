@@ -36,9 +36,9 @@ namespace DeviceApplication.Repositories
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("ERROR : Could not to be add Pag Device ---> ",ex.Message);
+                Console.WriteLine("ERROR : Could not to be add Pag Device ---> ", ex.Message);
                 return false;
             }
         }
@@ -52,7 +52,7 @@ namespace DeviceApplication.Repositories
             try
             {
                 var response = _mapper.Map<PagDevices>(pagDevice);
-                
+
                 _dbContext.PagDevices.Remove(response);
                 _dbContext.SaveChanges();
 
@@ -60,7 +60,7 @@ namespace DeviceApplication.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR : Could not delete to be Pag Device ----> ",ex.Message);
+                Console.WriteLine("ERROR : Could not delete to be Pag Device ----> ", ex.Message);
                 return false;
             }
         }
@@ -71,7 +71,7 @@ namespace DeviceApplication.Repositories
                 .Include(x => x.Device)
                 .ThenInclude(d => d.Alarms)
                 .ToListAsync();
-            
+
             var response = _mapper.Map<List<PagDeviceResponses>>(pagDevices);
             return response;
         }
@@ -98,14 +98,15 @@ namespace DeviceApplication.Repositories
             return response;
         }
 
-        public async Task<PagDevices> GetPagDeviceById(Guid id)
+        public async Task<PagDeviceResponses> GetPagDeviceById(Guid id)
         {
             var pagDevice = await _dbContext.PagDevices.Where(x => x.Id == id)
                 .Include(x => x.Device)
-                .ThenInclude(d => d.Alarms)
                 .FirstOrDefaultAsync();
-            
-            return pagDevice;
+
+            var response = _mapper.Map<PagDeviceResponses>(pagDevice);
+
+            return response;
         }
 
         public async Task<List<PagDeviceResponses>> GetPagDeviceByPagId(Guid pagId)
@@ -114,7 +115,7 @@ namespace DeviceApplication.Repositories
                 .Include(x => x.Device)
                 .ThenInclude(d => d.Alarms)
                 .Where(x => x.PagId == pagId).ToListAsync();
-            
+
             var response = _mapper.Map<List<PagDeviceResponses>>(pagDevices);
             return response;
         }
@@ -123,19 +124,33 @@ namespace DeviceApplication.Repositories
         {
             var pagDevice = await GetPagDeviceById(id);
 
-            var data = _mapper.Map<PagDevices>(pagDevice);
-
-            if (data != null)
+            if (pagDevice != null)
             {
                 try
                 {
-                    _dbContext.PagDevices.Update(data);
+                    var updateModel = new PagDeviceAddModel
+                    {
+                        
+                        PagDeviceName = updatePagDeviceModel.PagDeviceName,
+                        PagId = updatePagDeviceModel.PagId,
+                        DeviceId = updatePagDeviceModel.DeviceId,
+                        IpAddress = updatePagDeviceModel.IpAddress,
+                        Port = updatePagDeviceModel.Port,
+                        Timeout = updatePagDeviceModel.Timeout,
+                        Retry = updatePagDeviceModel.Retry,
+                        IsActive = updatePagDeviceModel.IsActive
+                    };
+
+                    var entity = _mapper.Map<PagDevices>(updateModel);
+                    entity.Id = id;
+
+                    _dbContext.PagDevices.Update(entity);
                     await _dbContext.SaveChangesAsync();
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("ERROR : Could not be update Pag Device -----> ",ex.Message);
+                    Console.WriteLine("ERROR : Could not be update Pag Device -----> ", ex.Message);
                     return false;
                 }
             }
