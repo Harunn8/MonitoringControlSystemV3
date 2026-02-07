@@ -119,7 +119,7 @@ namespace DeviceApplication.Services
             {
                 var payload = JsonConvert.SerializeObject(pagDevice);
 
-                _mqtt.PublishMessage("DCS/StartOrStopCommunication", $"{payload}");
+                _mqtt.PublishMessage("DeviceCommunicationService/AddDevice", $"{payload}");
 
                 var userLogModel = new UserLogs()
                 {
